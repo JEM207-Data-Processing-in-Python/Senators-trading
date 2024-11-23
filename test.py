@@ -1,1 +1,2 @@
-3das dasd 
+#Hello World
+print("Hello World")
