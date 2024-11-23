@@ -1,0 +1,8 @@
+pylint
+numpy
+pandas
+jupyter
+ipython
+requests
+python-dateutil
+pre-commit
