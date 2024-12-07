@@ -1,8 +1,7 @@
 pylint
-numpy
-pandas
+pytest
 jupyter
 ipython
 requests
-python-dateutil
-pre-commit
+plotly
+streamlit
