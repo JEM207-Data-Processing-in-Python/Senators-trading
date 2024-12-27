@@ -74,7 +74,7 @@ Quick guide to git:
 
 ```sh
 git status  # show what is in working space
-git add <specific file> or . # chose prepare things to commit
+git add <specific file> or .  # chose prepare things to commit
 git commit -m "<write meassege here>"  # committing things
 git push  # send it to the remote repository (to be visible for others contributors)
 
@@ -96,3 +96,7 @@ The visualization app we will create in **Streamlit** and **Plotly** More info a
 ### Requirements
 
 When adding new package, please include it also in requiremets or use `pip freeze > requirements.txt`.
+
+### Might be helpfull
+
+environ, unitmock,

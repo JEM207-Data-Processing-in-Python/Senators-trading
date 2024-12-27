@@ -5,3 +5,6 @@ ipython
 requests
 plotly
 streamlit
+selenium
+pandas
+yfinance

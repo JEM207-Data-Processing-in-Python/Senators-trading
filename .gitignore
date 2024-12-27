@@ -76,4 +76,4 @@ venv.bak/
 dmypy.json
 
 # data files
-*.csv
+#*.csv
