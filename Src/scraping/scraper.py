@@ -8,7 +8,7 @@ import json
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from bs4 import BeautifulSoup
 import yfinance as yf
-import scraper_utils as scrap_utils
+from Src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
 
 
 # TODO error handling, tests, class
@@ -17,7 +17,7 @@ def load_senators_trading():
     Function that loads the senators trading dataset
     """
     try:
-        data = pd.read_csv(r"..\..\Data\senators_trading.csv")
+        data = pd.read_csv(r"Data\senators_trading.csv")
     except FileNotFoundError:
         data = pd.DataFrame()
 
@@ -30,7 +30,7 @@ def load_financial_instruments():
     Function that loads the financial instruments dataset
     """
     try:
-        data = pd.read_csv(r"..\..\Data\financial_instruments.csv")
+        data = pd.read_csv(r"Data\financial_instruments.csv")
     except FileNotFoundError:
         data = pd.DataFrame()
 
@@ -108,7 +108,7 @@ def update_senators_trading(current_data):
                 'Traded Date': traded_date,
                 'Filed Date': filed_date
             }])
-            row_data = scrap_utils.senators_data_preparation(row_data)
+            row_data = senators_data_preparation(row_data)
 
             if np.array_equal(last_current_data.values, row_data.values):
                 print("Found record already in dataset.")
@@ -127,7 +127,6 @@ def update_senators_trading(current_data):
 
     return
 
-#update_senators_trading(load_senators_trading())
 
 # TODO error handling, tests, make the function more efficient and faster asynchronusly, class
 def update_financial_instruments(current_data, senators_data):
@@ -139,7 +138,7 @@ def update_financial_instruments(current_data, senators_data):
         curent_data = pd.DataFrame()
 
     tickers = senators_data.Ticker.drop_duplicates()
-    tickers = scrap_utils.fin_ticker_preparation(tickers)
+    tickers = fin_ticker_preparation(tickers)
 
     # Create empty dataframes for each type of asset
     update_data = pd.DataFrame()
@@ -163,14 +162,14 @@ def update_financial_instruments(current_data, senators_data):
         symbol_info = pd.json_normalize(symbol.info)
         symbol_info = symbol_info.dropna(how='all', axis=1)
         symbol_info.insert(0, 'Ticker', ticker)
-        symbol_info = scrap_utils.fin_info_preparation(symbol_info)
+        symbol_info = fin_info_preparation(symbol_info)
 
         # Check if the asset has the necessary information
         if 'quoteType' not in symbol_info.columns or symbol.history(period="max").empty:
             print(f"No information found for {ticker}.")
             continue
 
-        history = scrap_utils.fin_history_preparation(symbol.history(period="max").reset_index()).set_index('Date').T
+        history = fin_history_preparation(symbol.history(period="max").reset_index()).set_index('Date').T
         history.reset_index(drop=True, inplace=True)
 
         symbol_info = pd.concat([symbol_info, history], axis=1)
@@ -183,5 +182,3 @@ def update_financial_instruments(current_data, senators_data):
     current_data.to_csv(r"..\..\Data\financial_instruments.csv", index=False)
 
     return
-
-#update_financial_instruments(load_financial_instruments(), load_senators_trading())
