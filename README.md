@@ -49,7 +49,7 @@ copy .env.example .env
 ### 5. Run the application TODO
 
 ```sh
-python main.py  # Or your python runner
+streamlit run app.py
 ```
 
 ## How to code and contribute
