@@ -77,7 +77,7 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     """
     Allows to group the data by the specified parameters and create a line graph showing the cumulative investment over time for a specific politician or party.
     """
-    data_trading_in_time = data[[grouping_parametrs, "Traded", "avg_invested_adjusted"]]
+    data_trading_in_time = data[[grouping_parametrs, "Traded", "Invested"]]
 
     # Group by the specified columns and sum
     data_trading_in_time = data_trading_in_time.groupby([grouping_parametrs, "Traded"]).sum()
@@ -89,7 +89,7 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     data_trading_in_time["cumulative_invested"] = (
         data_trading_in_time.sort_values(by=[grouping_parametrs, "Traded"])
         .groupby(grouping_parametrs)
-        .apply(lambda group: group["avg_invested_adjusted"].cumsum())
+        .apply(lambda group: group["Invested"].cumsum())
         .reset_index(drop=True)
     )
 
@@ -100,7 +100,7 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     help_df = help_df.set_index("Traded")
 
     # Get the color for the graph (you may need to implement this function)
-    color_of_graph = get_the_color(politician)
+    color_of_graph = get_the_color(politician, data)
 
     # Create the Plotly figure
     fig = go.Figure()
@@ -122,7 +122,7 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     )
 
     # Show the plot
-    fig.show()
+    return fig
 
 
 # TODO error handling, tests, class
@@ -145,7 +145,7 @@ def pie_chart(data, politician):
     )
 
     # Show the plot
-    fig.show()
+    return fig
 
 
 # TODO error handling, tests, class
@@ -153,12 +153,12 @@ def pie_chart_advanced(data, purchase, subset, politician):
     """
     Create an advanced pie chart showing the average investment of a specific politician by the specified parameter and purchase type.
     """
-    selected_dataset = data[data["Action"] == purchase].groupby(["Politician", subset])["avg_invested"].sum().reset_index()
+    selected_dataset = data[data["Transaction"] == purchase].groupby(["Politician", subset])["Invested"].sum().reset_index()
 
     help_df = selected_dataset[selected_dataset["Politician"] == politician]
 
     labels = help_df.iloc[:, 1]
-    values = help_df['avg_invested']
+    values = help_df['Invested']
     title = help_df.columns[1]
 
     # Create the Plotly pie chart
@@ -171,7 +171,7 @@ def pie_chart_advanced(data, purchase, subset, politician):
     )
 
     # Show the plot
-    fig.show()
+    return fig
 
 # # Example usage:
 # from scraping.scraper import load_senators_trading
