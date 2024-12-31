@@ -6,6 +6,8 @@ from Src.scraping.scraper import load_financial_instruments
 from Src.scraping.scraper_utils import senators_data_preparation
 from Src.visualization.graphs_utils import get_the_color
 from Src.visualization.tables import top_five_purchased_stocks
+from Src.page_1_help_functions.information_gather import individual_invest_politician
+from Src.page_1_help_functions.information_gather import section_three_purchase_table
 from Src.visualization.graphs import grouping_for_barchart
 from Src.page_1_help_functions.information_gather import party_politician
 from Src.page_1_help_functions.information_gather import chmaber_politician
@@ -23,15 +25,14 @@ import streamlit as st
 
 #Original data
 data_senators = load_senators_trading()
-data_instrumeents = load_financial_instruments()
-data = data_senators.merge(data_instrumeents, how = "left", on = "Ticker")
+data_instruments = load_financial_instruments()
+data = data_senators.merge(data_instruments, how = "left", on = "Ticker")
+data = data.fillna("Unknown")
 
 #Lists for Interactive Buttons:
 list_of_politicians = data.Politician.unique()
-list_of_types_of_instruments = list(map(str, data.quoteType.unique()))
-
 list_of_politicians.sort()
-list_of_types_of_instruments.sort()
+
 
 #Page definition
 def page1():
@@ -77,10 +78,10 @@ def page1():
         """, unsafe_allow_html=True)
 
     # Button 1
-    button_bar_chart = st.button("📊")
+    button_bar_chart = st.button("📊 BARCHART")
 
     # Button 2
-    button_line_chart = st.button("📈")
+    button_line_chart = st.button("📈 LINECHART")
 
     if button_bar_chart:
         try:
@@ -121,8 +122,10 @@ def page1():
 
     if message_3 == "They has not invested in EQUITY either.":
         button_sale = st.button("Sale 📉")
+        st.write("There are no documented Purchases")
     elif message_4 == "They did not perform any sales of EQUITY during the documented time period.":
         button_purchase = st.button("Purchase 📈")
+        st.write("There are no documented Sales")
     else:
         button_purchase = st.button("Purchase 📈")
         button_sale = st.button("Sale 📉")
@@ -158,24 +161,46 @@ def page1():
     #THIRD SECTION
     st.subheader("Main individual investitions")
 
+    st.write("Select, whether you are interested in Purchases or Sales")
+    
+    #Necessary lists
+    list_of_transactions= list(map(str, data[data["Politician"] == selected_politician].Transaction.unique()))
+    
+    button_purchase_section_three = None
+    button_sale_section_three = None
 
+    if ("Purchase" in list_of_transactions) & ("Sale" not in list_of_transactions):
+        button_purchase_section_three = st.button("Individual Purchases 📈")
+        st.write("There are no documented Sales")
+    elif ("Sale" in list_of_transactions) & ("Purchase" not in list_of_transactions):
+        button_sale_section_three = st.button("Individual Sales 📉")
+        st.write("There are no documented Purchases")
+    else:
+        button_purchase_section_three = st.button("Individual Purchases 📈")
+        button_sale_section_three = st.button("Individual Sales 📉")
 
-    selected_type_of_instrument = st.selectbox(
-                                    "Select an instrument:",
-                                    options=list_of_types_of_instruments
-                                      )
+    if button_purchase_section_three:
+        purchase_section_three = "Purchase"
+    elif button_sale_section_three:
+        purchase_section_three = "Sale"
+    elif ("Purchase" in list_of_transactions) & ("Sale" not in list_of_transactions):
+        purchase_section_three = "Purchase"
+    elif ("Sale" in list_of_transactions) & ("Purchase" not in list_of_transactions):
+        purchase_section_three = "Sale"
+    else:
+        purchase_section_three = "Purchase" 
+    
+    list_of_types_of_instruments = list(map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == purchase)].quoteType.unique()))
+    list_of_types_of_instruments.sort()
 
-    st.subheader(f"Displaying the most traded stocks for {selected_politician}")
-    try:
-        top_five_table = top_five_purchased_stocks(data, selected_politician, selected_type_of_instrument)
-        st.table(top_five_table)
-    except Exception as e:
-        st.error(f"Error generating chart: {e}")
+    selected_type_of_instrument_section_three = st.selectbox(
+                "Select an instrument:",
+                options=list_of_types_of_instruments,
+                index=list_of_types_of_instruments.index(st.session_state["selected_instrument_purchase"]),
+                )
 
-
-
-
-
+    section_three_purchase_table(data, list_of_types_of_instruments, selected_politician, purchase_section_three, selected_type_of_instrument_section_three)
+    
 
 if __name__ == "__main__":
     page1()

@@ -1,3 +1,8 @@
+import streamlit as st
+from Src.visualization.tables import top_five_purchased_stocks
+from Src.visualization.tables import top_five_sold_stocks
+
+
 def party_politician(data, selected_politician):
     #Get information for interactive text
     party_politician = data[data["Politician"] == selected_politician]["Party"].unique()
@@ -131,7 +136,7 @@ def most_sold_sector_politician(data, selected_politician):
                                   .sort_values(by="Invested", ascending=False)
                                   .iloc[-1]["Invested"])
         
-        most_sold_sector_volume = f"{most_sold_sector_volume:,.0f}"
+        most_sold_sector_volume = f"{-most_sold_sector_volume:,.0f}"
     except:
         most_sold_sector_volume = "Empty"
 
@@ -139,6 +144,67 @@ def most_sold_sector_politician(data, selected_politician):
         message_4 = ("They did not perform any sales of EQUITY during the documented time period.")
     else:
         message_4 = (f"{selected_politician} sold EQUITY mostly in {most_sold_sector_politician} sector\
-            with the total average volume sold of {-most_sold_sector_volume} USD.")
+            with the total average volume sold of {most_sold_sector_volume} USD.")
         
     return message_4
+
+def individual_invest_politician(data, list, selected_politician):
+    message = []
+    for quoteType in list:
+        help_df = top_five_purchased_stocks(data, selected_politician, quoteType)
+        sub_message = f"in {quoteType}, where the most poular investition is {help_df.iloc[0]['Name']} with a total amount invested of {help_df.iloc[0]['Total Invested']}"
+        message.append(sub_message)
+    
+    final_message = "; ".join(message)
+
+    return final_message
+
+def individual_sell_politician(data, list, selected_politician):
+    message = []
+    for quoteType in list:
+        help_df = top_five_sold_stocks(data, selected_politician, quoteType)
+        sub_message = f"in {quoteType}, where the most sold was {help_df.iloc[0]['Name']} with a total amount sold of {help_df.iloc[0]['Total Sold']}"
+        message.append(sub_message)
+    
+    final_message = "; ".join(message)
+
+    return final_message
+
+
+def section_three_purchase_table(data, list_of_types_of_instruments, selected_politician, purchase, selected_type_of_instrument_section_three):
+    if purchase == "Purchase":
+        if list_of_types_of_instruments and len(list_of_types_of_instruments) > 0:
+            list_of_top_individual_invest = (
+                f"{selected_politician} has invested in {', '.join(list_of_types_of_instruments)}. "
+                f"They invest {individual_invest_politician(data, list_of_types_of_instruments, selected_politician)}."
+            )
+            st.write(list_of_top_individual_invest)
+
+            st.subheader(f"Displaying the most traded {selected_type_of_instrument_section_three} for {selected_politician}")
+            try:
+                top_five_table = top_five_purchased_stocks(data, selected_politician, selected_type_of_instrument_section_three)
+                st.table(top_five_table)
+            except Exception as e:
+                st.error(f"Error generating chart: {e}")
+        else:
+            st.write(f"{selected_politician} did not purchase any instruments in the documented time period.")
+
+    elif purchase == "Sale":
+        if list_of_types_of_instruments and len(list_of_types_of_instruments) > 0:
+            list_of_top_individual_sold = (
+                f"{selected_politician} has sold {', '.join(list_of_types_of_instruments)}. "
+                f"They sold {individual_sell_politician(data, list_of_types_of_instruments, selected_politician)}."
+            )
+            st.write(list_of_top_individual_sold)
+
+            # Update session state with the selected instrument for "Sale"
+            st.session_state["selected_instrument_sale"] = selected_type_of_instrument_section_three
+
+            st.subheader(f"Displaying the most sold {selected_type_of_instrument_section_three} for {selected_politician}")
+            try:
+                top_five_table_sold = top_five_sold_stocks(data, selected_politician, selected_type_of_instrument_section_three)
+                st.table(top_five_table_sold)
+            except Exception as e:
+                st.error(f"Error generating chart: {e}")
+        else:
+            st.write(f"{selected_politician} did not sell any instruments in the documented time period.")
