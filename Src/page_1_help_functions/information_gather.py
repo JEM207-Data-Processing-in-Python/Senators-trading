@@ -197,9 +197,6 @@ def section_three_purchase_table(data, list_of_types_of_instruments, selected_po
             )
             st.write(list_of_top_individual_sold)
 
-            # Update session state with the selected instrument for "Sale"
-            st.session_state["selected_instrument_sale"] = selected_type_of_instrument_section_three
-
             st.subheader(f"Displaying the most sold {selected_type_of_instrument_section_three} for {selected_politician}")
             try:
                 top_five_table_sold = top_five_sold_stocks(data, selected_politician, selected_type_of_instrument_section_three)

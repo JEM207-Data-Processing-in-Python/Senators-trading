@@ -26,6 +26,12 @@ import streamlit as st
 #Original data
 data_senators = load_senators_trading()
 data_instruments = load_financial_instruments()
+
+data_instruments = data_instruments[["Ticker", "quoteType", "currency",
+                                     "longName", "shortName", "industry", "sector", "city", 
+                                      "country", "industryKey", "industryDisp", "sectorKey", 
+                                      "sectorDisp", "longBusinessSummary", "financialCurrency"]]
+
 data = data_senators.merge(data_instruments, how = "left", on = "Ticker")
 data = data.fillna("Unknown")
 
@@ -196,7 +202,6 @@ def page1():
     selected_type_of_instrument_section_three = st.selectbox(
                 "Select an instrument:",
                 options=list_of_types_of_instruments,
-                index=list_of_types_of_instruments.index(st.session_state["selected_instrument_purchase"]),
                 )
 
     section_three_purchase_table(data, list_of_types_of_instruments, selected_politician, purchase_section_three, selected_type_of_instrument_section_three)
