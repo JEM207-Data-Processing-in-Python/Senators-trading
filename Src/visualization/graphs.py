@@ -2,6 +2,7 @@
 This script contains the function that creates a line graph showing the cumulative investment over time for a specific politician or party.
 """
 import plotly.graph_objects as go
+import pandas as pd
 from Src.scraping.scraper import load_senators_trading, load_financial_instruments
 from Src.visualization.graphs_utils import get_the_color
 
@@ -124,6 +125,55 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     # Show the plot
     return fig
 
+# TODO error handling, tests, class
+def grouping_for_barchart(grouping_parametrs, politician, data):
+    """
+    Allows to group the data by the specified parameters and create a bar chart showing the total investment 
+    over months for a specific politician or party.
+    """
+    # Extract relevant columns
+    data_trading_in_time = data[[grouping_parametrs, "Traded", "Invested", "Transaction"]]
+    
+    # Ensure that the "Traded" column is in datetime format
+    data_trading_in_time["Traded"] = pd.to_datetime(data_trading_in_time["Traded"])
+
+    # Add a new column for the month and year (using 'strftime' to get "YYYY-MM" format)
+    data_trading_in_time["Month"] = data_trading_in_time["Traded"].dt.strftime('%Y-%m')
+
+    # Group by the specified parameter (politician or party) and by Month, summing the Invested amounts
+    monthly_investment = data_trading_in_time.groupby([grouping_parametrs, "Month"])["Invested"].sum().reset_index()
+
+    # Filter the data based on the politician or party
+    help_df = monthly_investment[monthly_investment[grouping_parametrs] == politician]
+
+    # Determine the bar colors (green for positive, red for negative)
+    colors = help_df["Invested"].apply(lambda x: "green" if x > 0 else "red")
+    
+    # Create the Plotly bar chart
+    fig = go.Figure()
+
+    # Add bar trace for the investment per month
+    fig.add_trace(go.Bar(x=help_df["Month"],
+                         y=help_df["Invested"],
+                         name=politician,
+                         marker=dict(color=colors)))
+
+    # Update layout (labels and title)
+    fig.update_layout(
+        title=f"Total Investment per Month ({politician})",
+        xaxis_title="Month",
+        yaxis_title="Total Invested",
+        template="plotly_white",
+        barmode='relative',  
+        xaxis=dict(
+            tickmode="array",  
+            tickvals=help_df["Month"],  
+            tickformat="%b %Y",  
+        ),
+    )
+
+    return fig
+
 
 # TODO error handling, tests, class
 def pie_chart(data, politician):
@@ -158,7 +208,10 @@ def pie_chart_advanced(data, purchase, subset, politician):
     help_df = selected_dataset[selected_dataset["Politician"] == politician]
 
     labels = help_df.iloc[:, 1]
-    values = help_df['Invested']
+    if purchase == "Purchase":
+        values = help_df['Invested']
+    else:
+        values = -help_df['Invested']
     title = help_df.columns[1]
 
     # Create the Plotly pie chart
@@ -166,7 +219,7 @@ def pie_chart_advanced(data, purchase, subset, politician):
 
     # Update layout (title)
     fig.update_layout(
-        title=f"Average Investment of {politician} by {title} ({purchase})",
+        title= (f"Average Investment of \n {politician} by {title} \n ({purchase})"),
         template="plotly_white"
     )
 
