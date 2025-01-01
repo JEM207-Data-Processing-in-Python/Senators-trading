@@ -49,7 +49,7 @@ def total_sold_politician(data, selected_politician):
 
     help_df["Invested"] = -help_df["Invested"]
 
-    total_sold_politician = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")]["Invested"].sum()        
+    total_sold_politician = help_df[(help_df["Politician"] == selected_politician) & (help_df["Transaction"] == "Sale")]["Invested"].sum()  
 
     total_sold_politician = f"{total_sold_politician:,.0f}"
     
@@ -232,27 +232,130 @@ def five_days(data, selected_politician):
     return final
 
 def most_active_purchase(data, selected_politician):
+    # Prepare and sort data
     help_df = five_days(data, selected_politician)
-    help_df = help_df.sort_values(by = "Invested", ascending= False)
-
-    if help_df.iloc[0]["Invested"] > 0:
+    help_df = help_df.sort_values(by="Invested", ascending=False)
+    
+    # Initialize message
+    message = f"{selected_politician} has not purchased any instruments during the documented period."
+    
+    # First part of the message
+    if not help_df.empty and help_df.iloc[0]["Invested"] > 0:
         most_active_purchase = help_df.iloc[0]["Traded"]
         most_active_purchase_volume = help_df.iloc[0]["Invested"]
         most_active_purchase_volume = f"{most_active_purchase_volume:,.0f}"
-        message = f"{selected_politician} invested the most on {most_active_purchase} with a total volume pruchased of {most_active_purchase_volume} USD."
-    else:
-        message = f"{selected_politician} has not pruchased any instruments during the documented period."
+        message_p1 = (
+            f"{selected_politician} invested the most on {most_active_purchase} with a total "
+            f"volume purchased of {most_active_purchase_volume} USD."
+        )
+        
+        try:
+            # Filter data for the most active purchase
+            help_df1 = data[
+                (data["Politician"] == selected_politician) &
+                (data["Traded"] == most_active_purchase) &
+                (data["Transaction"] == "Purchase")
+            ].copy()
+
+            grouped_df1 = help_df1.groupby("quoteType", as_index=False)["Invested"].sum()
+
+            message_list = [
+                f"{quoteType} in a total volume purchased of {grouped_df1[grouped_df1['quoteType'] == quoteType].iloc[0]['Invested']:,.0f} USD"
+                for quoteType in grouped_df1["quoteType"].unique()
+            ]
+
+            message_p2 = f" The instruments purchased on this day were {'; '.join(message_list)}."
+
+            # Additional sector-specific message for EQUITY
+            if "EQUITY" in grouped_df1["quoteType"].unique():
+                help_df2 = data[
+                    (data["Politician"] == selected_politician) &
+                    (data["Traded"] == most_active_purchase) &
+                    (data["Transaction"] == "Purchase") &
+                    (data["quoteType"] == "EQUITY")
+                ].copy()
+
+                grouped_df2 = help_df2.groupby("sector", as_index=False)["Invested"].sum()
+                top_3_grouped_df2 = grouped_df2.sort_values(by="Invested", ascending=False).head(3)
+
+                message_list_1 = [
+                    f"{sector} in a total volume purchased of {top_3_grouped_df2[top_3_grouped_df2['sector'] == sector].iloc[0]['Invested']:,.0f} USD"
+                    for sector in top_3_grouped_df2["sector"]
+                ]
+
+                message_p3 = f" On this day, the EQUITY purchased was mainly in the sector: {'; '.join(message_list_1)}."
+                message = message_p1 + message_p2 + message_p3
+            else:
+                message = message_p1 + message_p2
+
+        except (KeyError, IndexError) as e:
+            # If any error occurs, fallback to message_p1
+            message = message_p1
+
     return message
+
+
 
 def most_active_sell(data, selected_politician):
     help_df = five_days(data, selected_politician)
-    help_df = help_df.sort_values(by = "Invested", ascending= False)
+    help_df = help_df.sort_values(by="Invested", ascending=False)
 
-    if help_df.iloc[-1]["Invested"] < 0:
+    # Initialize message
+    message = f"{selected_politician} has not sold any instruments during the documented period."
+
+    # First part of the message
+    if not help_df.empty and help_df.iloc[-1]["Invested"] < 0:
         most_active_sell = help_df.iloc[-1]["Traded"]
         most_active_sell_volume = -help_df.iloc[-1]["Invested"]
         most_active_sell_volume = f"{most_active_sell_volume:,.0f}"
-        message = f"{selected_politician} sold the most on {most_active_sell} with a total volume sold of {most_active_sell_volume} USD."
-    else:
-        message = f"{selected_politician} has not sold any instruments during the documented period."
+        message_p1 = (
+            f"{selected_politician} sold the most on {most_active_sell} with a total "
+            f"volume sold of {most_active_sell_volume} USD."
+        )
+
+        try:
+            # Filter data for the most active sale
+            help_df1 = data[
+                (data["Politician"] == selected_politician) &
+                (data["Traded"] == most_active_sell) &
+                (data["Transaction"] == "Sale")
+            ].copy()
+
+            help_df1["Invested"] = -help_df1["Invested"]
+            grouped_df1 = help_df1.groupby("quoteType", as_index=False)["Invested"].sum()
+
+            message_list = [
+                f"{quoteType} in a total volume sold of {grouped_df1[grouped_df1['quoteType'] == quoteType].iloc[0]['Invested']:,.0f} USD"
+                for quoteType in grouped_df1["quoteType"].unique()
+            ]
+
+            message_p2 = f" The instruments sold on this day were {'; '.join(message_list)}."
+
+            # Additional sector-specific message for EQUITY
+            if "EQUITY" in grouped_df1["quoteType"].unique():
+                help_df2 = data[
+                    (data["Politician"] == selected_politician) &
+                    (data["Traded"] == most_active_sell) &
+                    (data["Transaction"] == "Sale") &
+                    (data["quoteType"] == "EQUITY")
+                ].copy()
+
+                help_df2["Invested"] = -help_df2["Invested"]
+                grouped_df2 = help_df2.groupby("sector", as_index=False)["Invested"].sum()
+
+                top_3_grouped_df2 = grouped_df2.sort_values(by="Invested", ascending=False).head(3)
+                message_list_1 = [
+                    f"{sector} in a total volume sold of {top_3_grouped_df2[top_3_grouped_df2['sector'] == sector].iloc[0]['Invested']:,.0f} USD"
+                    for sector in top_3_grouped_df2["sector"]
+                ]
+
+                message_p3 = f" On this day, the EQUITY sold was mainly in the sector: {'; '.join(message_list_1)}."
+                message = message_p1 + message_p2 + message_p3
+            else:
+                message = message_p1 + message_p2
+
+        except (KeyError, IndexError) as e:
+            # If any error occurs, fallback to message_p1
+            message = message_p1
+
     return message

@@ -72,44 +72,26 @@ def page1():
                 Since then, {selected_politician} has purchased instruments in total amount of {total_invested_politician_value} USD and has sold instruments \
                 in total value of {total_sold_politician_value} USD. Their last documented transaction happened on {last_trade_politician_value}.")
     
-    col1, col2 = st.columns(2)
-
-    # Button to show the bar chart (Total Investment per Month)
-    st.write(f"To display the history of trading activity of {selected_politician}, select one of the buttons. Barchart displays their trading activity\
+        # Button to show the bar chart (Total Investment per Month)
+    st.write(f"To display the history of trading activity of {selected_politician}, select one of the tabs. Barchart displays their trading activity\
              summarized by month. Linechart displays the trading activity continuously:")
-    st.markdown("""
-        <style>
-            .stButton > button {
-                display: inline-block;
-                margin-right: 10px;
-            }
-        </style>
-        """, unsafe_allow_html=True)
-
-    #Buttons
-    button_bar_chart = st.button("📊 BARCHART")
-    button_line_chart = st.button("📈 LINECHART")
-
-    if button_bar_chart:
+    
+    tab1, tab2 = st.tabs(["📊 BARCHART", "📈 LINECHART"])
+   
+    with tab1:
         try:
             barchart_invested_in_time = grouping_for_barchart("Politician", selected_politician, data)
             st.plotly_chart(barchart_invested_in_time, use_container_width=True)
         except Exception as e:
             st.error(f"Error generating chart: {e}")
 
-    elif button_line_chart:
+    with tab2:
         try:
             chart_invested_in_time = grouping_for_graph("Politician", selected_politician, data)
             st.plotly_chart(chart_invested_in_time, use_container_width=True)
         except Exception as e:
             st.error(f"Error generating chart: {e}")
 
-    else:
-        try:
-            barchart_invested_in_time = grouping_for_barchart("Politician", selected_politician, data)
-            st.plotly_chart(barchart_invested_in_time, use_container_width=True)
-        except Exception as e:
-            st.error(f"Error generating chart: {e}")
 
     #SECOND SECTION
     st.subheader("Exposure to the market")
@@ -122,107 +104,124 @@ def page1():
 
     st.write(f"{message_1} {message_2} {message_3} {message_4}")
     
-    #Charts
-    st.write("Select, whether you want to see the graphs for Purchases or Sales:")
-    button_purchase = None
-    button_sale = None
+    # Charts
+    st.write("Select whether you want to see the graphs for Purchases or Sales:")
 
-    if message_3 == "They has not invested in EQUITY either.":
-        button_sale = st.button("Sale 📉")
-        st.write("There are no documented Purchases")
-    elif message_4 == "They did not perform any sales of EQUITY during the documented time period.":
-        button_purchase = st.button("Purchase 📈")
-        st.write("There are no documented Sales")
-    else:
-        button_purchase = st.button("Purchase 📈")
-        button_sale = st.button("Sale 📉")
-    
-    if button_purchase:
-        purchase = "Purchase"
-    elif button_sale:
-        purchase = "Sale"
-    elif message_3 == "They has not invested in EQUITY either.":
-        purchase = "Sale"
-    elif message_4 == "They did not perform any sales of EQUITY during the documented time period.":
-        purchase = "Purchase"
-    else:
-        purchase = "Purchase"
-    
+    # Create tabs for "Purchase" and "Sale"
+    tabs = st.tabs(["Purchase 📈", "Sale 📉"])
 
-    col1, col2 = st.columns(2)
-    with col1:
-        try:
-            chart_pie_chart_exposure_1 = pie_chart_advanced(data, purchase, "quoteType", selected_politician)
-            st.plotly_chart(chart_pie_chart_exposure_1, use_container_width=True)
-        except Exception as e:
-            st.error(f"Error generating chart: {e}")
+    with tabs[0]:  # Purchase tab
+        if message_3 == "They has not invested in EQUITY either.":
+            st.write("There are no documented Purchases.")
+        else:
+            purchase = "Purchase"
+            col1, col2 = st.columns(2)
+            with col1:
+                try:
+                    chart_pie_chart_exposure_1 = pie_chart_advanced(data, purchase, "quoteType", selected_politician)
+                    st.plotly_chart(chart_pie_chart_exposure_1, use_container_width=True)
+                except Exception as e:
+                    st.error(f"Error generating chart: {e}")
 
-    with col2:
-        try:
-            chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sector", selected_politician)
-            st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True)
-        except Exception as e:
-            st.error(f"Error generating chart: {e}")
+            with col2:
+                try:
+                    chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sector", selected_politician)
+                    st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True)
+                except Exception as e:
+                    st.error(f"Error generating chart: {e}")
+
+    with tabs[1]:  # Sale tab
+        if message_4 == "They did not perform any sales of EQUITY during the documented time period.":
+            st.write("There are no documented Sales.")
+        else:
+            purchase = "Sale"
+            col1, col2 = st.columns(2)
+            with col1:
+                try:
+                    chart_pie_chart_exposure_1 = pie_chart_advanced(data, purchase, "quoteType", selected_politician)
+                    st.plotly_chart(chart_pie_chart_exposure_1, use_container_width=True)
+                except Exception as e:
+                    st.error(f"Error generating chart: {e}")
+
+            with col2:
+                try:
+                    chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sector", selected_politician)
+                    st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True)
+                except Exception as e:
+                    st.error(f"Error generating chart: {e}")
 
 
-    #THIRD SECTION
-    st.subheader("Main individual investitions")
-
-    st.write("Select, whether you are interested in Purchases or Sales")
-    
-    #Necessary lists
-    list_of_transactions= list(map(str, data[data["Politician"] == selected_politician].Transaction.unique()))
-
-    button_purchase_section_three = None
-    button_sale_section_three = None
+    # THIRD SECTION
+    st.subheader("Main Individual Investments")
+    st.write(f"Here you can see {selected_politician}'s five most purchased and sold instruments per type.")
+    st.write("Firstly, select whether you are interested in Purchases or Sales:")
 
     # Ensure session state for `purchase_section_three` exists
     if "purchase_section_three" not in st.session_state:
         st.session_state.purchase_section_three = "Purchase"
 
-    # Initialize the buttons
-    if ("Purchase" in list_of_transactions) & ("Sale" not in list_of_transactions):
-        button_purchase_section_three = st.button("Individual Purchases 📈")
-        st.write("There are no documented Sales")
-        if button_purchase_section_three:
+    # Create tabs for Purchases and Sales
+    tab_purchase, tab_sale = st.tabs(["Purchases 📈", "Sales 📉"])
+
+    with tab_purchase:
+        # Check if there are any documented Purchases
+        if "Purchase" not in data[data["Politician"] == selected_politician].Transaction.unique():
+            st.write("There are no documented Purchases.")
+        else:
             st.session_state.purchase_section_three = "Purchase"
-    elif ("Sale" in list_of_transactions) & ("Purchase" not in list_of_transactions):
-        button_sale_section_three = st.button("Individual Sales 📉")
-        st.write("There are no documented Purchases")
-        if button_sale_section_three:
+
+            # Dropdown for Purchases
+            list_of_types_of_instruments = list(
+                map(
+                    str,
+                    data[
+                        (data["Politician"] == selected_politician) & 
+                        (data["Transaction"] == "Purchase")
+                    ].quoteType.unique()
+                )
+            )
+            list_of_types_of_instruments.sort()
+
+            selected_type_of_instrument_section_three = st.selectbox(
+                "Select an instrument:",
+                options=list_of_types_of_instruments,
+            )
+
+            # Call the function for Purchases
+            section_three_purchase_table(
+                data, list_of_types_of_instruments, selected_politician, 
+                "Purchase", selected_type_of_instrument_section_three
+            )
+
+    with tab_sale:
+        # Check if there are any documented Sales
+        if "Sale" not in data[data["Politician"] == selected_politician].Transaction.unique():
+            st.write("There are no documented Sales.")
+        else:
             st.session_state.purchase_section_three = "Sale"
-    else:
-        button_purchase_section_three = st.button("Individual Purchases 📈")
-        button_sale_section_three = st.button("Individual Sales 📉")
-        if button_purchase_section_three:
-            st.session_state.purchase_section_three = "Purchase"
-        elif button_sale_section_three:
-            st.session_state.purchase_section_three = "Sale"
 
-    # Retrieve the current state
-    purchase_section_three = st.session_state.purchase_section_three
+            # Dropdown for Sales
+            list_of_types_of_instruments = list(
+                map(
+                    str,
+                    data[
+                        (data["Politician"] == selected_politician) & 
+                        (data["Transaction"] == "Sale")
+                    ].quoteType.unique()
+                )
+            )
+            list_of_types_of_instruments.sort()
 
-    # Dropdown logic
-    if purchase_section_three == "Purchase":
-        list_of_types_of_instruments = list(
-            map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].quoteType.unique())
-        )
-    else:  # Sale
-        list_of_types_of_instruments = list(
-            map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].quoteType.unique())
-        )
-        list_of_types_of_instruments.sort()
+            selected_type_of_instrument_section_three = st.selectbox(
+                "Select an instrument:",
+                options=list_of_types_of_instruments,
+            )
 
-
-    selected_type_of_instrument_section_three = st.selectbox(
-        "Select an instrument:",
-        options=list_of_types_of_instruments,
-    )
-
-    # Call your function with the appropriate arguments
-    section_three_purchase_table(
-        data, list_of_types_of_instruments, selected_politician, purchase_section_three, selected_type_of_instrument_section_three
-        )
+            # Call the function for Sales
+            section_three_purchase_table(
+                data, list_of_types_of_instruments, selected_politician, 
+                "Sale", selected_type_of_instrument_section_three
+            )
     
 
     #FOURTH SECTION
@@ -231,7 +230,7 @@ def page1():
     most_active_purchase_value = most_active_purchase(data, selected_politician)
     most_active_sell_value = most_active_sell(data, selected_politician)
 
-    st.write(f"{most_active_purchase_value} {most_active_sell_value}")
+    st.write(f"{most_active_purchase_value} \n \n {most_active_sell_value}")
 
     try:
         barchart_five_days = five_days_graph(data, selected_politician)
