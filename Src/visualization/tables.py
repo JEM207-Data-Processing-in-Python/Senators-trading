@@ -2,6 +2,7 @@
 This script contains the functions that create the helpfull tables that can be later displayed.
 """
 
+# TODO tests, error handling, class
 def top_five_purchased_stocks(data, politician, quoteType):
     """
     Create a table with the top 5 traded stocks and last transactions.
@@ -22,9 +23,7 @@ def top_five_purchased_stocks(data, politician, quoteType):
                                           .set_index("Ticker"))
 
         top_five_with_last_transaction = top_five_with_last_transaction[["Name", "Sector", "Total Invested", "Last Purchase"]]   
-
         top_five_with_last_transaction = top_five_with_last_transaction.sort_values(by=["Total Invested", "Last Purchase"], ascending=[False, False]).head(5)
-
         top_five_with_last_transaction["Total Invested"] = top_five_with_last_transaction["Total Invested"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
     
     else:
@@ -37,15 +36,13 @@ def top_five_purchased_stocks(data, politician, quoteType):
                                           .set_index("Ticker"))
 
         top_five_with_last_transaction = top_five_with_last_transaction[["Name", "Total Invested", "Last Purchase"]]   
-
         top_five_with_last_transaction = top_five_with_last_transaction.sort_values(by=["Total Invested", "Last Purchase"], ascending=[False, False]).head(5)
-
-
         top_five_with_last_transaction["Total Invested"] = top_five_with_last_transaction["Total Invested"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
 
     return top_five_with_last_transaction
 
 
+# TODO tests, error handling, class
 def top_five_sold_stocks(data, politician, quoteType):
     """
     Create a table with the top 5 sold stocks and last transactions.
@@ -67,24 +64,19 @@ def top_five_sold_stocks(data, politician, quoteType):
                                       .set_index("Ticker"))
 
         top_five_with_last_transaction_sold = top_five_with_last_transaction_sold[["Name", "Sector", "Total Sold", "Last Purchase"]]   
-
         top_five_with_last_transaction_sold = top_five_with_last_transaction_sold.sort_values(by = ["Total Sold", "Last Purchase"], ascending = [False, False]).head(5)
-
         top_five_with_last_transaction_sold["Total Sold"] = top_five_with_last_transaction_sold["Total Sold"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
     
     else:
         grouped_df = help_df.groupby("Ticker", as_index=False)["Invested"].sum().round(0)
-
         last_transaction = help_df.groupby(["Ticker", "shortName"], as_index=False)["Traded"].last()
-
         top_five_with_last_transaction_sold = (grouped_df
                                       .merge(last_transaction, how = "left", on = "Ticker")
                                       .rename(columns = {"Invested" : "Total Sold", "Traded" : "Last Purchase", "shortName":"Name"})
                                       .set_index("Ticker"))
 
         top_five_with_last_transaction_sold = top_five_with_last_transaction_sold[["Name", "Total Sold", "Last Purchase"]]   
-
         top_five_with_last_transaction_sold = top_five_with_last_transaction_sold.sort_values(by = ["Total Sold", "Last Purchase"], ascending = [False, False]).head(5)
-
         top_five_with_last_transaction_sold["Total Sold"] = top_five_with_last_transaction_sold["Total Sold"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
+
     return top_five_with_last_transaction_sold

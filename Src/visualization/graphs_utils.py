@@ -3,6 +3,7 @@ This file contains the utility functions used in the visualization of the data.
 """
 import pandas as pd
 
+
 #TODO tests, exception
 def get_the_color(politician: str, data: pd.DataFrame) -> str:
     """
@@ -22,6 +23,7 @@ def get_the_color(politician: str, data: pd.DataFrame) -> str:
         color = "white"
 
     return color
+
 
 #TODO tests, exception
 def get_the_color_positive_negative(politician: str, data: pd.DataFrame) -> str:

@@ -3,9 +3,10 @@ This script contains the function that creates a line graph showing the cumulati
 """
 import plotly.graph_objects as go
 import pandas as pd
-from Src.scraping.scraper import load_senators_trading, load_financial_instruments
-from Src.visualization.graphs_utils import get_the_color
-from Src.page_1_help_functions.information_gather import five_days
+from src.scraping.scraper import load_senators_trading
+from src.visualization.graphs_utils import get_the_color
+from src.streamlit.page_1_data_gather import five_days
+
 
 # TODO error handling, tests, class
 def pie_chart_chamber():
@@ -259,11 +260,3 @@ def five_days_graph(data, selected_politician):
     )
 
     return fig
-# # Example usage:
-# from scraping.scraper import load_senators_trading
-
-# # Load the data
-# data = load_senators_trading()
-
-# # Call the function with the loaded data
-# grouping_for_graph("Politician", "Cory A. Booker", data)

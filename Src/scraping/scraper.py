@@ -8,7 +8,7 @@ import json
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from bs4 import BeautifulSoup
 import yfinance as yf
-from Src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
+from src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
 
 
 # TODO error handling, tests, class

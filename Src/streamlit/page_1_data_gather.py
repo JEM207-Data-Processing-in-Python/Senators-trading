@@ -1,9 +1,13 @@
+"""
+This script contains the functions that create the text and tables for the first page of the Streamlit app.
+"""
 import streamlit as st
 import pandas as pd
-from Src.visualization.tables import top_five_purchased_stocks
-from Src.visualization.tables import top_five_sold_stocks
+from src.visualization.tables import top_five_purchased_stocks
+from src.visualization.tables import top_five_sold_stocks
 
 
+# TODO: tests, error handling
 def party_politician(data, selected_politician):
     #Get information for interactive text
     party_politician = data[data["Politician"] == selected_politician]["Party"].unique()
@@ -16,6 +20,8 @@ def party_politician(data, selected_politician):
     
     return party_politician
 
+
+# TODO: tests, error handling
 def chmaber_politician(data, selected_politician):
     chamber_politician = data[data["Politician"] == selected_politician]["Chamber"].unique()
     if chamber_politician == "House":
@@ -27,16 +33,22 @@ def chmaber_politician(data, selected_politician):
 
     return chamber_politician
 
+
+# TODO: tests, error handling
 def first_trade_politician(data, selected_politician):
     first_trade_politician = data[data["Politician"] == selected_politician]["Traded"].min()
 
     return first_trade_politician
 
+
+# TODO: tests, error handling
 def last_trade_politician(data, selected_politician):
     last_trade_politician = data[data["Politician"] == selected_politician]["Traded"].max()
 
     return last_trade_politician
 
+
+# TODO: tests, error handling
 def total_invested_politician(data, selected_politician):
     total_invested_politician = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")]["Invested"].sum()
 
@@ -44,6 +56,8 @@ def total_invested_politician(data, selected_politician):
 
     return total_invested_politician
 
+
+# TODO: tests, error handling
 def total_sold_politician(data, selected_politician):
     help_df = data.copy()
 
@@ -55,6 +69,8 @@ def total_sold_politician(data, selected_politician):
     
     return total_sold_politician
 
+
+# TODO: tests, error handling
 def most_trade_type_politician(data, selected_politician):
     try:
         most_trade_type_politician = (data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")]
@@ -69,6 +85,8 @@ def most_trade_type_politician(data, selected_politician):
 
     return message_1
 
+
+# TODO: tests, error handling
 def most_traded_volume_politician(data, selected_politician):
     try:
         most_traded_volume_politician = (data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")]
@@ -84,6 +102,8 @@ def most_traded_volume_politician(data, selected_politician):
 
     return message_2
 
+
+# TODO: tests, error handling
 def most_traded_sector_politician(data, selected_politician):
     try:
         most_traded_sector_politician = (data[(data["Politician"] == selected_politician) &
@@ -119,6 +139,7 @@ def most_traded_sector_politician(data, selected_politician):
     return message_3
 
 
+# TODO: tests, error handling
 def most_sold_sector_politician(data, selected_politician):
     try:
         most_sold_sector_politician = (data[(data["Politician"] == selected_politician) &
@@ -153,6 +174,8 @@ def most_sold_sector_politician(data, selected_politician):
         
     return message_4
 
+
+# TODO: tests, error handling
 def individual_invest_politician(data, list, selected_politician):
     message = []
     for quoteType in list:
@@ -164,6 +187,8 @@ def individual_invest_politician(data, list, selected_politician):
 
     return final_message
 
+
+# TODO: tests, error handling
 def individual_sell_politician(data, list, selected_politician):
     message = []
     for quoteType in list:
@@ -176,6 +201,7 @@ def individual_sell_politician(data, list, selected_politician):
     return final_message
 
 
+# TODO: tests, error handling
 def section_three_purchase_table(data, list_of_types_of_instruments, selected_politician, purchase, selected_type_of_instrument_section_three):
     if purchase == "Purchase":
         if list_of_types_of_instruments and len(list_of_types_of_instruments) > 0:
@@ -211,6 +237,8 @@ def section_three_purchase_table(data, list_of_types_of_instruments, selected_po
         else:
             st.write(f"{selected_politician} did not sell any instruments in the documented time period.")
 
+
+# TODO: tests, error handling
 def five_days(data, selected_politician):
     help_df_purchase = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].copy()
     help_df_sale = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].copy()
@@ -231,6 +259,8 @@ def five_days(data, selected_politician):
 
     return final
 
+
+# TODO: tests, error handling
 def most_active_purchase(data, selected_politician):
     # Prepare and sort data
     help_df = five_days(data, selected_politician)
@@ -295,7 +325,7 @@ def most_active_purchase(data, selected_politician):
     return message
 
 
-
+# TODO: tests, error handling
 def most_active_sell(data, selected_politician):
     help_df = five_days(data, selected_politician)
     help_df = help_df.sort_values(by="Invested", ascending=False)
