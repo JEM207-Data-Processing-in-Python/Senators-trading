@@ -1,6 +1,7 @@
 import streamlit as st
 from Src.visualization.graphs import pie_chart_advanced
 from Src.visualization.graphs import grouping_for_graph
+from Src.visualization.graphs import five_days_graph
 from Src.scraping.scraper import load_senators_trading
 from Src.scraping.scraper import load_financial_instruments
 from Src.scraping.scraper_utils import senators_data_preparation
@@ -19,6 +20,8 @@ from Src.page_1_help_functions.information_gather import most_trade_type_politic
 from Src.page_1_help_functions.information_gather import most_traded_volume_politician
 from Src.page_1_help_functions.information_gather import most_traded_sector_politician
 from Src.page_1_help_functions.information_gather import most_sold_sector_politician
+from Src.page_1_help_functions.information_gather import most_active_purchase
+from Src.page_1_help_functions.information_gather import most_active_sell
 
 # Page1.py
 import streamlit as st
@@ -73,7 +76,7 @@ def page1():
 
     # Button to show the bar chart (Total Investment per Month)
     st.write(f"To display the history of trading activity of {selected_politician}, select one of the buttons. Barchart displays their trading activity\
-             summarized by month. Linechart displays the trading activity continuosly:")
+             summarized by month. Linechart displays the trading activity continuously:")
     st.markdown("""
         <style>
             .stButton > button {
@@ -83,10 +86,8 @@ def page1():
         </style>
         """, unsafe_allow_html=True)
 
-    # Button 1
+    #Buttons
     button_bar_chart = st.button("📊 BARCHART")
-
-    # Button 2
     button_line_chart = st.button("📈 LINECHART")
 
     if button_bar_chart:
@@ -171,41 +172,72 @@ def page1():
     
     #Necessary lists
     list_of_transactions= list(map(str, data[data["Politician"] == selected_politician].Transaction.unique()))
-    
+
     button_purchase_section_three = None
     button_sale_section_three = None
 
+    # Ensure session state for `purchase_section_three` exists
+    if "purchase_section_three" not in st.session_state:
+        st.session_state.purchase_section_three = "Purchase"
+
+    # Initialize the buttons
     if ("Purchase" in list_of_transactions) & ("Sale" not in list_of_transactions):
         button_purchase_section_three = st.button("Individual Purchases 📈")
         st.write("There are no documented Sales")
+        if button_purchase_section_three:
+            st.session_state.purchase_section_three = "Purchase"
     elif ("Sale" in list_of_transactions) & ("Purchase" not in list_of_transactions):
         button_sale_section_three = st.button("Individual Sales 📉")
         st.write("There are no documented Purchases")
+        if button_sale_section_three:
+            st.session_state.purchase_section_three = "Sale"
     else:
         button_purchase_section_three = st.button("Individual Purchases 📈")
         button_sale_section_three = st.button("Individual Sales 📉")
+        if button_purchase_section_three:
+            st.session_state.purchase_section_three = "Purchase"
+        elif button_sale_section_three:
+            st.session_state.purchase_section_three = "Sale"
 
-    if button_purchase_section_three:
-        purchase_section_three = "Purchase"
-    elif button_sale_section_three:
-        purchase_section_three = "Sale"
-    elif ("Purchase" in list_of_transactions) & ("Sale" not in list_of_transactions):
-        purchase_section_three = "Purchase"
-    elif ("Sale" in list_of_transactions) & ("Purchase" not in list_of_transactions):
-        purchase_section_three = "Sale"
-    else:
-        purchase_section_three = "Purchase" 
-    
-    list_of_types_of_instruments = list(map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == purchase)].quoteType.unique()))
-    list_of_types_of_instruments.sort()
+    # Retrieve the current state
+    purchase_section_three = st.session_state.purchase_section_three
+
+    # Dropdown logic
+    if purchase_section_three == "Purchase":
+        list_of_types_of_instruments = list(
+            map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].quoteType.unique())
+        )
+    else:  # Sale
+        list_of_types_of_instruments = list(
+            map(str, data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].quoteType.unique())
+        )
+        list_of_types_of_instruments.sort()
+
 
     selected_type_of_instrument_section_three = st.selectbox(
-                "Select an instrument:",
-                options=list_of_types_of_instruments,
-                )
+        "Select an instrument:",
+        options=list_of_types_of_instruments,
+    )
 
-    section_three_purchase_table(data, list_of_types_of_instruments, selected_politician, purchase_section_three, selected_type_of_instrument_section_three)
+    # Call your function with the appropriate arguments
+    section_three_purchase_table(
+        data, list_of_types_of_instruments, selected_politician, purchase_section_three, selected_type_of_instrument_section_three
+        )
     
+
+    #FOURTH SECTION
+    st.subheader("Most active days")
+
+    most_active_purchase_value = most_active_purchase(data, selected_politician)
+    most_active_sell_value = most_active_sell(data, selected_politician)
+
+    st.write(f"{most_active_purchase_value} {most_active_sell_value}")
+
+    try:
+        barchart_five_days = five_days_graph(data, selected_politician)
+        st.plotly_chart(barchart_five_days, use_container_width=True)
+    except Exception as e:
+        st.error(f"Error generating chart: {e}")
 
 if __name__ == "__main__":
     page1()

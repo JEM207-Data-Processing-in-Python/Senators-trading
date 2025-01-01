@@ -40,9 +40,6 @@ def top_five_purchased_stocks(data, politician, quoteType):
 
         top_five_with_last_transaction = top_five_with_last_transaction.sort_values(by=["Total Invested", "Last Purchase"], ascending=[False, False]).head(5)
 
-        # Replace NaN values with "Unknown" or "N/A"
-        top_five_with_last_transaction["Name"] = top_five_with_last_transaction["Name"].fillna("Unknown")
-        top_five_with_last_transaction["Last Purchase"] = top_five_with_last_transaction["Last Purchase"].fillna("N/A")
 
         top_five_with_last_transaction["Total Invested"] = top_five_with_last_transaction["Total Invested"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
 

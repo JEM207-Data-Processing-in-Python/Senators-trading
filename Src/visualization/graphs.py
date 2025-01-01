@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import pandas as pd
 from Src.scraping.scraper import load_senators_trading, load_financial_instruments
 from Src.visualization.graphs_utils import get_the_color
+from Src.page_1_help_functions.information_gather import five_days
 
 # TODO error handling, tests, class
 def pie_chart_chamber():
@@ -226,6 +227,38 @@ def pie_chart_advanced(data, purchase, subset, politician):
     # Show the plot
     return fig
 
+def five_days_graph(data, selected_politician):
+    help_df = five_days(data, selected_politician)
+
+    help_df_sorted = help_df.sort_values(by="Invested", ascending=False)
+
+    colors = help_df_sorted["Invested"].apply(lambda x: "green" if x > 0 else "red")
+    
+
+    # Create the Plotly bar chart
+    fig = go.Figure()
+
+    # Add bar trace for the investment per month
+    fig.add_trace(go.Bar(x=help_df_sorted["Traded"],
+                         y=help_df_sorted["Invested"],
+                         name=selected_politician,
+                         marker=dict(color=colors)))
+
+    # Update layout (labels and title)
+    fig.update_layout(
+        title=f"Days with the biggest trading volume of ({selected_politician})",
+        xaxis_title="Day",
+        yaxis_title="Volume",
+        template="plotly_white",
+        barmode='relative',  
+        xaxis=dict(
+            type="category",
+            tickmode="array",  
+            tickvals=help_df_sorted["Traded"],   
+            ),
+    )
+
+    return fig
 # # Example usage:
 # from scraping.scraper import load_senators_trading
 

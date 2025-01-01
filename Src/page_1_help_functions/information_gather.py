@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from Src.visualization.tables import top_five_purchased_stocks
 from Src.visualization.tables import top_five_sold_stocks
 
@@ -44,11 +45,15 @@ def total_invested_politician(data, selected_politician):
     return total_invested_politician
 
 def total_sold_politician(data, selected_politician):
+    help_df = data.copy()
+
+    help_df["Invested"] = -help_df["Invested"]
+
     total_sold_politician = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")]["Invested"].sum()        
 
-    total_invested_politician = f"{total_sold_politician:,.0f}"
+    total_sold_politician = f"{total_sold_politician:,.0f}"
     
-    return -total_sold_politician
+    return total_sold_politician
 
 def most_trade_type_politician(data, selected_politician):
     try:
@@ -180,7 +185,7 @@ def section_three_purchase_table(data, list_of_types_of_instruments, selected_po
             )
             st.write(list_of_top_individual_invest)
 
-            st.subheader(f"Displaying the most traded {selected_type_of_instrument_section_three} for {selected_politician}")
+            st.caption(f"Displaying the most traded {selected_type_of_instrument_section_three} for {selected_politician}")
             try:
                 top_five_table = top_five_purchased_stocks(data, selected_politician, selected_type_of_instrument_section_three)
                 st.table(top_five_table)
@@ -197,7 +202,7 @@ def section_three_purchase_table(data, list_of_types_of_instruments, selected_po
             )
             st.write(list_of_top_individual_sold)
 
-            st.subheader(f"Displaying the most sold {selected_type_of_instrument_section_three} for {selected_politician}")
+            st.caption(f"Displaying the most sold {selected_type_of_instrument_section_three} for {selected_politician}")
             try:
                 top_five_table_sold = top_five_sold_stocks(data, selected_politician, selected_type_of_instrument_section_three)
                 st.table(top_five_table_sold)
@@ -205,3 +210,49 @@ def section_three_purchase_table(data, list_of_types_of_instruments, selected_po
                 st.error(f"Error generating chart: {e}")
         else:
             st.write(f"{selected_politician} did not sell any instruments in the documented time period.")
+
+def five_days(data, selected_politician):
+    help_df_purchase = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].copy()
+    help_df_sale = data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].copy()
+
+    top_five = (help_df_purchase.groupby("Traded", as_index = False)["Invested"]
+                .sum()
+                .sort_values(by = "Invested", ascending = False)
+                .head(5)
+                )
+    
+    last_five = (help_df_sale.groupby("Traded", as_index = False)["Invested"]
+                .sum()
+                .sort_values(by = "Invested", ascending = True)
+                .head(5)
+                )
+    
+    final = pd.concat([top_five, last_five]).sort_values(by = "Invested")
+
+    return final
+
+def most_active_purchase(data, selected_politician):
+    help_df = five_days(data, selected_politician)
+    help_df = help_df.sort_values(by = "Invested", ascending= False)
+
+    if help_df.iloc[0]["Invested"] > 0:
+        most_active_purchase = help_df.iloc[0]["Traded"]
+        most_active_purchase_volume = help_df.iloc[0]["Invested"]
+        most_active_purchase_volume = f"{most_active_purchase_volume:,.0f}"
+        message = f"{selected_politician} invested the most on {most_active_purchase} with a total volume pruchased of {most_active_purchase_volume} USD."
+    else:
+        message = f"{selected_politician} has not pruchased any instruments during the documented period."
+    return message
+
+def most_active_sell(data, selected_politician):
+    help_df = five_days(data, selected_politician)
+    help_df = help_df.sort_values(by = "Invested", ascending= False)
+
+    if help_df.iloc[-1]["Invested"] < 0:
+        most_active_sell = help_df.iloc[-1]["Traded"]
+        most_active_sell_volume = -help_df.iloc[-1]["Invested"]
+        most_active_sell_volume = f"{most_active_sell_volume:,.0f}"
+        message = f"{selected_politician} sold the most on {most_active_sell} with a total volume sold of {most_active_sell_volume} USD."
+    else:
+        message = f"{selected_politician} has not sold any instruments during the documented period."
+    return message
