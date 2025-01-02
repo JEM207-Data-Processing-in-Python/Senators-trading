@@ -49,7 +49,7 @@ copy .env.example .env
 ### 5. Run the application TODO
 
 ```sh
-streamlit run app.py
+streamlit run 🏠_Home.py
 ```
 
 ## How to code and contribute
