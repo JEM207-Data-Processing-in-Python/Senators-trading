@@ -80,3 +80,50 @@ def top_five_sold_stocks(data, politician, quoteType):
         top_five_with_last_transaction_sold["Total Sold"] = top_five_with_last_transaction_sold["Total Sold"].apply(lambda x: f"{int(x):,}".replace(",", " ") + " USD")
 
     return top_five_with_last_transaction_sold
+
+def data_for_strategy_align_type(data):
+    total_purchase_df = (data[data["Transaction"] == "Purchase"]
+                         .groupby(["Politician"], as_index = False)["Invested"]
+                         .sum()
+                         .rename(columns = {"Invested" : "Total Invested"})
+                        )
+
+    total_purchase_type_df = (data[data["Transaction"] == "Purchase"]
+                         .groupby(["Politician", "quoteType"], as_index = False)["Invested"]
+                         .sum()
+                         .rename(columns = {"Invested" : "Total Invested Type"})
+                        )
+   
+    
+    help_df_type = (total_purchase_type_df
+                    .merge(total_purchase_df, how = "left", on = "Politician")
+                    )
+    
+    help_df_type["Total Invested Type"] = help_df_type["Total Invested Type"]/help_df_type["Total Invested"]
+
+    return help_df_type
+    
+
+    
+def data_for_strategy_align_sector(data):
+    total_purchase_type_df = (data[data["Transaction"] == "Purchase"]
+                         .groupby(["Politician", "quoteType"], as_index = False)["Invested"]
+                         .sum()
+                         .rename(columns = {"Invested" : "Total Invested"})
+                        )
+    
+    total_purchase_equity_df = total_purchase_type_df[total_purchase_type_df["quoteType"] == "EQUITY"]
+
+    total_purchase_sector_df = (data[(data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")]
+                         .groupby(["Politician", "sector"], as_index = False)["Invested"]
+                         .sum()
+                         .rename(columns = {"Invested" : "Total Invested Sector"})
+                        )
+
+    help_df_sector = (total_purchase_sector_df
+                    .merge(total_purchase_equity_df, how = "left", on = "Politician")
+                    )  
+    
+    help_df_sector["Total Invested Sector"] = help_df_sector["Total Invested Sector"] / help_df_sector["Total Invested"]
+
+    return help_df_sector
