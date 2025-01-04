@@ -1,7 +1,5 @@
 pylint
 pytest
-jupyter
-ipython
 requests
 plotly
 streamlit
