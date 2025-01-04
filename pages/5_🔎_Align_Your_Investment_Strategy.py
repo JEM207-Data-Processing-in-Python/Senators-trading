@@ -1,7 +1,9 @@
 
 import streamlit as st
+import pandas as pd
 from src.visualization.tables import data_for_strategy_align_type, data_for_strategy_align_sector
 from src.scraping.scraper import load_senators_trading, load_financial_instruments
+from src.streamlit.page_5_functions import best_alignment
 
 #Original data
 data_senators = load_senators_trading()
@@ -98,10 +100,18 @@ st.markdown(f"Input total: {round(sum(inputs.values()),0)} / 100")
 if st.button("Submit"):
     if len(inputs) == len(list_of_unique_sectors) and sum(inputs.values()) == 100:
         st.success(f"All inputs are valid. Proceed to Investment alignment")
+
+        strategy_inserted_sector = pd.DataFrame(list(inputs.items()), columns=['sector', 'Invested by User'])
+
+        top_5_sector_strategy = best_alignment(strategy_sector, strategy_inserted_sector)
+
+        st.table(top_5_sector_strategy)
+
     elif len(inputs) == len(list_of_unique_sectors):
         st.warning(f"Ensure the sum of inputs is equal to 100 (current sum: {sum(inputs.values())}/100).")
     else:
         st.warning("Your inputs are invalid.")
+
 
 
 

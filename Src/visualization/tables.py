@@ -1,6 +1,8 @@
 """
 This script contains the functions that create the helpfull tables that can be later displayed.
 """
+import pandas as pd
+
 
 # TODO tests, error handling, class
 def top_five_purchased_stocks(data, politician, quoteType):
@@ -99,9 +101,17 @@ def data_for_strategy_align_type(data):
                     .merge(total_purchase_df, how = "left", on = "Politician")
                     )
     
-    help_df_type["Total Invested Type"] = help_df_type["Total Invested Type"]/help_df_type["Total Invested"]
+    help_df_type["Total Invested Type"] = help_df_type["Total Invested Type"] * 100 / help_df_type["Total Invested"]
 
-    return help_df_type
+    unique_politicians = pd.DataFrame({"Politician" : help_df_type["Politician"].unique()})
+    unique_type = pd.DataFrame({"quoteType" : help_df_type["quoteType"].unique()})
+
+    cross_joined_df = unique_politicians.merge(unique_type, how='cross')
+
+        
+    final_table = cross_joined_df.merge(help_df_type, how = "left", on = ["Politician", "quoteType"]).fillna(0)
+
+    return final_table
     
 
     
@@ -124,6 +134,13 @@ def data_for_strategy_align_sector(data):
                     .merge(total_purchase_equity_df, how = "left", on = "Politician")
                     )  
     
-    help_df_sector["Total Invested Sector"] = help_df_sector["Total Invested Sector"] / help_df_sector["Total Invested"]
+    help_df_sector["Total Invested Sector"] = help_df_sector["Total Invested Sector"] * 100 / help_df_sector["Total Invested"]
 
-    return help_df_sector
+    unique_politicians = pd.DataFrame({"Politician" : help_df_sector["Politician"].unique()})
+    unique_sector = pd.DataFrame({"sector" : help_df_sector["sector"].unique()})
+    
+    cross_joined_df = unique_politicians.merge(unique_sector, how='cross')
+    
+    final_table = cross_joined_df.merge(help_df_sector, how = "left", on = ["Politician", "sector"]).fillna(0)
+
+    return final_table
