@@ -1,14 +1,10 @@
 """
 This file contains the configuration of Streamlit app Politician Finder page.
 """
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import streamlit as st
-from src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
-from src.scraping.scraper import load_senators_trading, load_financial_instruments
-from src.streamlit.page_1_data_gather import *
+from .src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
+from .src.scraping.scraper import load_senators_trading, load_financial_instruments
+from .src.streamlit.page_1_data_gather import *
 
 #Original data
 data_senators = load_senators_trading()
