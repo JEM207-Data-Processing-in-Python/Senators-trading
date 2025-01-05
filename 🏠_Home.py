@@ -29,4 +29,4 @@ st.write(os.listdir("/app"))
 
 # List the contents of the src directory
 st.write("SRC Directory Contents:")
-st.write(os.listdir("/app/src"))
+st.write(os.listdir("/app/Src"))
