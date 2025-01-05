@@ -3,6 +3,10 @@ This file contains the configuration of Streamlit app Home page and it also serv
 """
 
 import streamlit as st
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Set the page configuration
 st.set_page_config(
