@@ -1,7 +1,6 @@
 """
 This file contains the configuration of Streamlit app Home page and it also serves as the main page of the app.
 """
-from Src.scraping.scraper import load_senators_trading
 import streamlit as st
 
 # Set the page configuration
