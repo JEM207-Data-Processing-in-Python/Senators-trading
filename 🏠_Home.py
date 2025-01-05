@@ -23,3 +23,10 @@ st.title("Main App")
 st.write("Navigate to other pages!")
 st.write("Python Path:")
 st.write(sys.path)
+
+st.write("App Directory Contents:")
+st.write(os.listdir("/app"))
+
+# List the contents of the src directory
+st.write("SRC Directory Contents:")
+st.write(os.listdir("/app/src"))
