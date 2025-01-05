@@ -6,8 +6,6 @@ import streamlit as st
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 # Set the page configuration
 st.set_page_config(
     page_title="Home",
