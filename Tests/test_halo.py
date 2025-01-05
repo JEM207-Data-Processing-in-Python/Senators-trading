@@ -1,5 +1,5 @@
 import pytest
-from Src.dummy import add  # Import the dummy function
+from Src.dummy.helo import add  # Import the dummy function
 
 def test_add():
     """
