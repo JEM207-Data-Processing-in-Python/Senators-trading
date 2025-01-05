@@ -24,9 +24,36 @@ st.write(sys.path)
 st.write("App Directory Contents:")
 st.write(os.listdir("/app"))
 
-# List the contents of the src directory
-st.write("SRC Directory Contents:")
-st.write(os.listdir("/app/Data"))
+import pandas as pd
+
+# File path
+file_path = "/app/Data/senators_trading.csv"
+
+# Check if the file exists
+if os.path.exists(file_path):
+    # Get file size
+    file_size = os.path.getsize(file_path)
+    file_size_kb = file_size / 1024  # Convert to kilobytes
+
+    # Get file modification time
+    mod_time = os.path.getmtime(file_path)
+    mod_time_str = pd.to_datetime(mod_time, unit='s')  # Human-readable format
+
+    # Print file information
+    st.write("### File Information:")
+    st.write(f"**Path:** {file_path}")
+    st.write(f"**Size:** {file_size_kb:.2f} KB")
+    st.write(f"**Last Modified:** {mod_time_str}")
+
+    # Read and display the CSV
+    try:
+        data = pd.read_csv(file_path)
+        st.write("### Data Preview:")
+        st.write(data.head())
+    except Exception as e:
+        st.error(f"Error reading the file: {e}")
+else:
+    st.error(f"The file does not exist at the path: {file_path}")
 
 data_instruments = load_senators_trading()
 st.write("Columns in data_instruments:")
