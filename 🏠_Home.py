@@ -1,7 +1,7 @@
 """
 This file contains the configuration of Streamlit app Home page and it also serves as the main page of the app.
 """
-
+import Src.scraping.scraper as scraper
 import streamlit as st
 import sys
 import os
@@ -27,3 +27,7 @@ st.write(os.listdir("/app"))
 # List the contents of the src directory
 st.write("SRC Directory Contents:")
 st.write(os.listdir("/app/Data"))
+
+data_instruments = scraper.load_instruments_data()
+st.write("Columns in data_instruments:")
+st.write(data_instruments.columns.tolist())
