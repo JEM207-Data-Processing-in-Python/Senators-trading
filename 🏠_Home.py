@@ -3,11 +3,7 @@ This file contains the configuration of Streamlit app Home page and it also serv
 """
 
 import streamlit as st
-import sys
-import os
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if ROOT_DIR not in sys.path:
-    sys.path.append(ROOT_DIR)
+
 # Set the page configuration
 st.set_page_config(
     page_title="Home",
@@ -21,12 +17,3 @@ st.set_page_config(
 
 st.title("Main App")
 st.write("Navigate to other pages!")
-st.write("Python Path:")
-st.write(sys.path)
-
-st.write("App Directory Contents:")
-st.write(os.listdir("/app"))
-
-# List the contents of the src directory
-st.write("SRC Directory Contents:")
-st.write(os.listdir("/app/Src"))

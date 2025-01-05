@@ -3,9 +3,9 @@ This script contains the function that creates a line graph showing the cumulati
 """
 import plotly.graph_objects as go
 import pandas as pd
-from src.scraping.scraper import load_senators_trading
-from src.visualization.graphs_utils import get_the_color
-from src.streamlit.page_1_data_gather import five_days
+from Src.scraping.scraper import load_senators_trading
+from Src.visualization.graphs_utils import get_the_color
+from Src.streamlit.page_1_data_gather import five_days
 
 
 # TODO error handling, tests, class
