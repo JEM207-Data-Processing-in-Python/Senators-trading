@@ -50,6 +50,9 @@ if os.path.exists(file_path):
         data = pd.read_csv(file_path)
         st.write("### Data Preview:")
         st.write(data.head())
+        st.write("Data/senators_trading.csv")
+        data = pd.read_csv(r"Data/senators_trading.csv")
+        st.write(data.head())
     except Exception as e:
         st.error(f"Error reading the file: {e}")
 else:
