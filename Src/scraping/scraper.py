@@ -5,10 +5,11 @@ import pandas as pd
 import numpy as np
 import requests
 import json
+import os
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from bs4 import BeautifulSoup
 import yfinance as yf
-from src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
+from Src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
 
 
 # TODO error handling, tests, class
@@ -17,7 +18,7 @@ def load_senators_trading():
     Function that loads the senators trading dataset
     """
     try:
-        data = pd.read_csv(r"Data\senators_trading.csv")
+        data = pd.read_csv(os.path.join("Data", "senators_trading.csv"))
     except FileNotFoundError:
         data = pd.DataFrame()
 
@@ -30,7 +31,7 @@ def load_financial_instruments():
     Function that loads the financial instruments dataset
     """
     try:
-        data = pd.read_csv(r"Data\financial_instruments.csv")
+        data = pd.read_csv(os.path.join("Data", "financial_instruments.csv"))
     except FileNotFoundError:
         data = pd.DataFrame()
 

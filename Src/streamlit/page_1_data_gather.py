@@ -3,8 +3,8 @@ This script contains the functions that create the text and tables for the first
 """
 import streamlit as st
 import pandas as pd
-from src.visualization.tables import top_five_purchased_stocks
-from src.visualization.tables import top_five_sold_stocks
+from Src.visualization.tables import top_five_purchased_stocks
+from Src.visualization.tables import top_five_sold_stocks
 
 
 # TODO: tests, error handling

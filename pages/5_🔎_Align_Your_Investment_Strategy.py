@@ -1,9 +1,9 @@
 
 import streamlit as st
 import pandas as pd
-from src.visualization.tables import data_for_strategy_align_type, data_for_strategy_align_sector
-from src.scraping.scraper import load_senators_trading, load_financial_instruments
-from src.streamlit.page_5_functions import best_alignment
+from Src.visualization.tables import data_for_strategy_align_type, data_for_strategy_align_sector
+from Src.scraping.scraper import load_senators_trading, load_financial_instruments
+from Src.streamlit.page_5_functions import best_alignment
 
 #Original data
 data_senators = load_senators_trading()

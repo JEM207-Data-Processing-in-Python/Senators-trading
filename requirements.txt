@@ -1,5 +1,5 @@
-pylint
-pytest
+beautifulsoup4
+ipython
 jupyter
 ipython
 requests
