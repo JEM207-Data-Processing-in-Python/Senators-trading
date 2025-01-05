@@ -1,6 +1,7 @@
 """
 Scrapper functions for senators trading dataset and the financial inforamtion
 """
+import os
 import pandas as pd
 import numpy as np
 import requests
@@ -17,7 +18,7 @@ def load_senators_trading():
     Function that loads the senators trading dataset
     """
     try:
-        data = pd.read_csv(r"Data\senators_trading.csv")
+        data = pd.read_csv(os.path.join("Data", "senators_trading.csv"))
     except FileNotFoundError:
         data = pd.DataFrame()
 
@@ -30,7 +31,7 @@ def load_financial_instruments():
     Function that loads the financial instruments dataset
     """
     try:
-        data = pd.read_csv(r"Data\financial_instruments.csv")
+        data = pd.read_csv(os.path.join("Data", "financial_instruments.csv"))
     except FileNotFoundError:
         data = pd.DataFrame()
 
