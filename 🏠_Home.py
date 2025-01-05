@@ -15,5 +15,5 @@ st.set_page_config(
     }
 )
 
-st.title("Main App")
+st.title("Main App page")
 st.write("Navigate to other pages!")
