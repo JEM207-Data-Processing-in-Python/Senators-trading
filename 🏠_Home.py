@@ -19,3 +19,5 @@ st.set_page_config(
 
 st.title("Main App")
 st.write("Navigate to other pages!")
+st.write("Python Path:")
+st.write(sys.path)
