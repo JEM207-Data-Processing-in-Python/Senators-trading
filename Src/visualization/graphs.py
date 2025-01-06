@@ -4,7 +4,7 @@ This script contains the function that creates a line graph showing the cumulati
 import plotly.graph_objects as go
 import pandas as pd
 from Src.scraping.scraper import load_senators_trading
-from Src.visualization.graphs_utils import get_the_color
+from Src.visualization.graphs_utils import get_the_color, same_color_across_pie_charts
 from Src.streamlit.page_1_data_gather import five_days
 
 
@@ -227,6 +227,87 @@ def pie_chart_advanced(data, purchase, subset, politician):
 
     # Show the plot
     return fig
+
+def pie_chart_politician_page_five(data, purchase, subset, politician, list_of_sectors_instruments):
+    """
+    Create an advanced pie chart showing the average investment of a specific politician by the specified parameter and purchase type.
+    """
+    # Get consistent colors for the list_of_sectors_instruments
+    colors = same_color_across_pie_charts(list_of_sectors_instruments)
+
+    # Filter and aggregate data
+    selected_dataset = data[data["Transaction"] == purchase].groupby(["Politician", subset])["Invested"].sum().reset_index()
+    help_df = selected_dataset[selected_dataset["Politician"] == politician]
+
+    # Prepare data for the pie chart
+    labels = help_df.iloc[:, 1]  # Subset column
+    if purchase == "Purchase":
+        values = help_df['Invested']
+    else:
+        values = -help_df['Invested']
+    title = help_df.columns[1]
+
+    # Match colors to labels
+    default_color = "#d3d3d3"
+    pie_colors = [colors[label] if label in colors else default_color for label in labels]
+
+    # Create the Plotly pie chart
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                labels=labels,
+                values=values,
+                hole=0.3,
+                marker=dict(colors=pie_colors),  # Assign custom colors
+            )
+        ]
+    )
+
+    # Update layout (title and style)
+    fig.update_layout(
+        title=f"{politician}'s exopsure to the EQUITY:",
+        template="plotly_white"
+    )
+
+    # Return the plot
+    return fig
+
+def pie_chart_user_page_five(data, list_of_sectors_instruments, what):
+    """
+    Create a pie chart showing the average investment of a user by list_of_sectors_instruments with consistent colors.
+    """
+    # Dynamically create consistent color mapping
+    colors = same_color_across_pie_charts(list_of_sectors_instruments)
+
+    # Prepare data for the pie chart
+    labels = data[what]
+    values = data["Invested by User"]
+
+    # Match colors to labels
+    default_color = "#d3d3d3"
+    pie_colors = [colors[label] if label in colors else default_color for label in labels]
+
+    # Create the Plotly pie chart
+    fig = go.Figure(
+        data=[
+            go.Pie(
+                labels=labels,
+                values=values,
+                hole=0.3,
+                marker=dict(colors=pie_colors),  # Assign custom colors
+            )
+        ]
+    )
+
+    # Update layout (title and style)
+    fig.update_layout(
+        title=f"Your exposure to the EQUITY:",
+        template="plotly_white"
+    )
+
+    # Return the plot
+    return fig
+
 
 def five_days_graph(data, selected_politician):
     help_df = five_days(data, selected_politician)

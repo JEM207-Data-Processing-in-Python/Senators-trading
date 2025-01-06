@@ -2,7 +2,7 @@
 This file contains the utility functions used in the visualization of the data.
 """
 import pandas as pd
-
+import seaborn as sns
 
 #TODO tests, exception
 def get_the_color(politician: str, data: pd.DataFrame) -> str:
@@ -44,3 +44,11 @@ def get_the_color_positive_negative(politician: str, data: pd.DataFrame) -> str:
         color = "white"
 
     return color
+
+def same_color_across_pie_charts(unique_elements: list) -> dict:
+    color_palette = sns.color_palette("tab10", len(unique_elements)).as_hex()
+    
+
+    color_mapping = dict(zip(unique_elements, color_palette))
+    
+    return color_mapping

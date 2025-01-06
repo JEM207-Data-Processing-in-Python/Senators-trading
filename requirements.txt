@@ -9,3 +9,4 @@ pandas
 numpy
 yfinance
 BeautifulSoup4
+seaborn
