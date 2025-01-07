@@ -118,7 +118,7 @@ with tab1:
                         st.error(f"Value for {instrument} must be a number.")
 
     # Validate inputs and ensure the sum is 100
-    st.markdown(f"Input total: {round(sum(inputs_instrument.values()),2)} / 100")
+    st.markdown(f"Input total: {round(sum(inputs_instrument.values()), 2)} / 100")
     if st.button("SUBMIT", key="Submit_instrument"):
         if len(inputs_instrument) == len(list_of_unique_instruments) and sum(inputs_instrument.values()) == 100:
 
@@ -186,7 +186,6 @@ with tab2:
 
             equity_alignment_politician_sector(unique_5_politicians, list_of_unique_sectors, data_sector, strategy_inserted_sector)
 
-            
         elif len(inputs) == len(list_of_unique_sectors):
             st.warning(f"Ensure the sum of inputs is equal to 100 (current sum: {sum(inputs.values())}/100).")
         else:

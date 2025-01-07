@@ -66,14 +66,11 @@ def best_alignment_instrument(data_general, data_user):
 def equity_alignment_politician_sector(list_of_politicians, list_of_unique_sectors, data_general, data_user):
     # Merge data frames on 'sector'
     strategy_data = data_for_strategy_align_sector(data_general)
-    
+
     help_df = strategy_data.merge(data_user, how="left", on="sector")
 
     # Calculate alignment score based on the normalized difference, clip to avoid negatives
-    help_df["alignment"] = (
-        1 - abs(help_df["Total Invested Sector"] - help_df["Invested by User"]) /
-        help_df["Total Invested Sector"].replace(0, 1)  # Replace zeros with 1 to avoid division by zero
-    ).clip(lower=0)  # Clip the alignment score to avoid negative values
+    help_df["alignment"] = (1 - abs(help_df["Total Invested Sector"] - help_df["Invested by User"]) / help_df["Total Invested Sector"].replace(0, 1)).clip(lower=0)  # Clip the alignment score to avoid negative values
 
     tabs = st.tabs(list_of_politicians)
     for i, tab in enumerate(tabs):
@@ -114,7 +111,7 @@ def equity_alignment_politician_instrument(list_of_politicians, list_of_unique_i
     for i, tab in enumerate(tabs):
         with tab:
             st.header(f"Comparison with {list_of_politicians[i]}")
-               
+
             col_politician, col_user = st.columns(2)
 
             with col_politician:
