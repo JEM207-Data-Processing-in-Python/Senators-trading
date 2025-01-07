@@ -130,7 +130,7 @@ with tab1:
             if inputs_instrument["EQUITY"] == 100:
                 st.subheader("There are many politicians with 100% exposure to the EQUITY and the table below is not relevant.")
             else:
-                st.subheader(f"CONGRATS! Your strategy is the most compatible with {top_5_instrument_strategy['Politician'].iloc[0]}")
+                st.subheader(f"CONGRATS! Your strategy is the most compatible with {top_5_instrument_strategy["Politician"].iloc[0]}")
             st.write(f"Your strategies are compatible on {round(top_5_instrument_strategy["Alignment (%)"].iloc[0], 1)} %")
             st.write("Below you may find the TOP 5 politicians, which whom you have the biggest compliance in strategy!")
 
