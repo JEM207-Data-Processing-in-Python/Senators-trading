@@ -114,8 +114,8 @@ def update_senators_trading(current_data):
             if np.array_equal(last_current_data.values, row_data.values):
                 print("Found record already in dataset.")
                 current_data = pd.concat([new_data, current_data], ignore_index=True)
-                print("Adding number of new recors: ",len(new_data))
-                current_data.to_csv(r"..\..\Data\senators_trading.csv", index = False)
+                print("Adding number of new recors: ", len(new_data))
+                current_data.to_csv(r"..\..\Data\senators_trading.csv", index=False)
                 return
 
             new_data = pd.concat([new_data, row_data], ignore_index=True)
@@ -124,7 +124,7 @@ def update_senators_trading(current_data):
         page += 1
     current_data = pd.concat([new_data, current_data], ignore_index=True)
     print("Data saved to senators_trading.csv")
-    current_data.to_csv(r"..\..\Data\senators_trading.csv", index = False)
+    current_data.to_csv(r"..\..\Data\senators_trading.csv", index=False)
 
     return
 
@@ -136,14 +136,14 @@ def update_financial_instruments(current_data, senators_data):
     """
     # obtain all tickers that are already in dataset
     if current_data.empty:
-        curent_data = pd.DataFrame()
+        current_data = pd.DataFrame()
 
     tickers = senators_data.Ticker.drop_duplicates()
     tickers = fin_ticker_preparation(tickers)
 
     # Create empty dataframes for each type of asset
     update_data = pd.DataFrame()
-    i=0
+    i = 0
     # Get the information about the assets
     for ticker in tickers:
         # Check if the data is up to date
@@ -155,7 +155,7 @@ def update_financial_instruments(current_data, senators_data):
 
         # Check if the ticker is already in the dataset and have last trade record
         if ticker in current_data["Ticker"].values and current_data[current_data["Ticker"] == ticker].columns[-1] == last_working_day.strftime('%Y-%m-%d'):
-            i+=1
+            i += 1
             continue
 
         # Get the information about the asset
@@ -175,7 +175,7 @@ def update_financial_instruments(current_data, senators_data):
 
         symbol_info = pd.concat([symbol_info, history], axis=1)
         update_data = pd.concat([update_data, symbol_info], ignore_index=True)
-        i+=1
+        i += 1
 
     current_data = current_data[~current_data['Ticker'].isin(update_data['Ticker'])]
     current_data = pd.concat([current_data, update_data], ignore_index=True, join='outer')

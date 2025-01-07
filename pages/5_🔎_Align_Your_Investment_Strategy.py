@@ -5,16 +5,16 @@ from Src.visualization.tables import data_for_strategy_align_type, data_for_stra
 from Src.scraping.scraper import load_senators_trading, load_financial_instruments
 from Src.streamlit.page_5_functions import best_alignment_sector, equity_alignment_politician_sector, best_alignment_instrument, equity_alignment_politician_instrument
 
-#Original data
+# Original data
 data_senators = load_senators_trading()
 data_instruments = load_financial_instruments()
 
 data_instruments = data_instruments[["Ticker", "quoteType", "currency",
-                                     "longName", "shortName", "industry", "sector", "city", 
-                                      "country", "industryKey", "industryDisp", "sectorKey", 
-                                      "sectorDisp", "longBusinessSummary", "financialCurrency"]]
+                                     "longName", "shortName", "industry", "sector", "city",
+                                     "country", "industryKey", "industryDisp", "sectorKey",
+                                     "sectorDisp", "longBusinessSummary", "financialCurrency"]]
 
-data = data_senators.merge(data_instruments, how = "left", on = "Ticker")
+data = data_senators.merge(data_instruments, how="left", on="Ticker")
 data = data.fillna("Unknown")
 data_sector = data[data["sector"] != "Unknown"]
 data_instruments = data[data["quoteType"] != "Unknown"]
@@ -82,10 +82,12 @@ st.markdown(
 inputs = {}
 inputs_instrument = {}
 
+
 # Helper function to chunk the list into groups of 5
 def chunk_list(lst, n):
     for i in range(0, len(lst), n):
-        yield lst[i : i + n]
+        yield lst[i: i + n]
+
 
 # Create input fields with a maximum of 5 sectors per row
 st.subheader("Align either Instrument or Equity strategy:")
@@ -115,21 +117,21 @@ with tab1:
                     except ValueError:
                         st.error(f"Value for {instrument} must be a number.")
 
-    # Validate inputs and ensure the sum is 100               
-    st.markdown(f"Input total: {round(sum(inputs_instrument.values()),0)} / 100")
-    if st.button("SUBMIT", key = "Submit_instrument"):
+    # Validate inputs and ensure the sum is 100
+    st.markdown(f"Input total: {round(sum(inputs_instrument.values()), 0)} / 100")
+    if st.button("SUBMIT", key="Submit_instrument"):
         if len(inputs_instrument) == len(list_of_unique_instruments) and sum(inputs_instrument.values()) == 100:
-            
+
             st.markdown("---")
             strategy_inserted_instrument = pd.DataFrame(list(inputs_instrument.items()), columns=['quoteType', 'Invested by User'])
 
             top_5_instrument_strategy = best_alignment_instrument(strategy_type, strategy_inserted_instrument)
-            
+
             if inputs_instrument["EQUITY"] == 100:
                 st.subheader("There are many politicians with 100% exposure to the EQUITY and the table below is not relevant.")
             else:
                 st.subheader(f"CONGRATS! Your strategy is the most compatible with {top_5_instrument_strategy["Politician"].iloc[0]}")
-            st.write(f"Your strategies are compatible on {round(top_5_instrument_strategy["Alignment (%)"].iloc[0],1)} %")
+            st.write(f"Your strategies are compatible on {round(top_5_instrument_strategy["Alignment (%)"].iloc[0], 1)} %")
             st.write("Below you may find the TOP 5 politicians, which whom you have the biggest compliance in strategy!")
 
             st.table(top_5_instrument_strategy)
@@ -139,8 +141,6 @@ with tab1:
             st.write("Select one of the politicians to see the detailed analysis:")
 
             equity_alignment_politician_instrument(unique_5_politicians, list_of_unique_instruments, data_instruments, strategy_inserted_instrument)
-
-
 
 with tab2:
     st.markdown("Politicians invest in the following sectors. Now, you may enter your desirable exposure to the individual sectors. Total exposure must sum to 100 (%). \
@@ -166,18 +166,17 @@ with tab2:
                         st.error(f"Value for {sector} must be a number.")
 
     # Validate inputs and ensure the sum is 100
-    st.markdown(f"Input total: {round(sum(inputs.values()),0)} / 100")
-    if st.button("SUBMIT", key = "Submit_sector"):
+    st.markdown(f"Input total: {round(sum(inputs.values()), 0)} / 100")
+    if st.button("SUBMIT", key="Submit_sector"):
         if len(inputs) == len(list_of_unique_sectors) and sum(inputs.values()) == 100:
-            
+
             st.markdown("---")
             strategy_inserted_sector = pd.DataFrame(list(inputs.items()), columns=['sector', 'Invested by User'])
             top_5_sector_strategy = best_alignment_sector(strategy_sector, strategy_inserted_sector)
-            
-            st.subheader(f"CONGRATS! Your strategy is the most compatible with {top_5_sector_strategy["Politician"].iloc[0]}")
-            st.write(f"Your strategies are compatible on {round(top_5_sector_strategy["Alignment (%)"].iloc[0],1)} %")
-            st.write("Below you may find the TOP 5 politicians, which whom you have the biggest compliance in strategy!")
 
+            st.subheader(f"CONGRATS! Your strategy is the most compatible with {top_5_sector_strategy["Politician"].iloc[0]}")
+            st.write(f"Your strategies are compatible on {round(top_5_sector_strategy["Alignment (%)"].iloc[0], 1)} %")
+            st.write("Below you may find the TOP 5 politicians, which whom you have the biggest compliance in strategy!")
 
             st.table(top_5_sector_strategy)
 
@@ -191,7 +190,3 @@ with tab2:
             st.warning(f"Ensure the sum of inputs is equal to 100 (current sum: {sum(inputs.values())}/100).")
         else:
             st.warning("Your inputs are invalid.")
-
-
-
-

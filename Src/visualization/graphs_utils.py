@@ -4,14 +4,15 @@ This file contains the utility functions used in the visualization of the data.
 import pandas as pd
 import seaborn as sns
 
-#TODO tests, exception
+
+# TODO tests, exception
 def get_the_color(politician: str, data: pd.DataFrame) -> str:
     """
     Determines the color associated with the political party of a given politician.
 
     :param politician: str - The name of the politician whose party color is to be determined.
     :param data: pd.DataFrame - A pandas DataFrame containing columns "Politician" and "Party" - ("R" or "D").
-    
+
     :return: str - The color associated with the politician's party. Returns "red" for Republican, "blue" for Democrat.
     """
     party = data[data["Politician"] == politician].iloc[0]["Party"]
@@ -25,14 +26,14 @@ def get_the_color(politician: str, data: pd.DataFrame) -> str:
     return color
 
 
-#TODO tests, exception
+# TODO tests, exception
 def get_the_color_positive_negative(politician: str, data: pd.DataFrame) -> str:
     """
     Determines the color associated with the political party of a given politician.
 
     :param politician: str - The name of the politician whose party color is to be determined.
     :param data: pd.DataFrame - A pandas DataFrame containing columns "Politician" and "Party" - ("R" or "D").
-    
+
     :return: str - The color associated with the politician's party. Returns "red" for Republican, "blue" for Democrat.
     """
     party = data[data["Politician"] == politician].iloc[0]["Party"]
@@ -45,10 +46,10 @@ def get_the_color_positive_negative(politician: str, data: pd.DataFrame) -> str:
 
     return color
 
+
 def same_color_across_pie_charts(unique_elements: list) -> dict:
     color_palette = sns.color_palette("tab10", len(unique_elements)).as_hex()
-    
 
     color_mapping = dict(zip(unique_elements, color_palette))
-    
+
     return color_mapping

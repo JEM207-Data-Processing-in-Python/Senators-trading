@@ -4,21 +4,21 @@ This file contains the configuration of Streamlit app Politician Finder page.
 import streamlit as st
 from Src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
 from Src.scraping.scraper import load_senators_trading, load_financial_instruments
-from Src.streamlit.page_1_data_gather import *
+from Src.streamlit.page_1_data_gather import party_politician, first_trade_politician, last_trade_politician, total_invested_politician, total_sold_politician, most_trade_type_politician, most_traded_volume_politician, most_traded_sector_politician, most_sold_sector_politician, most_active_purchase, most_active_sell, section_three_purchase_table, chamber_politician
 
-#Original data
+# Original data
 data_senators = load_senators_trading()
 data_instruments = load_financial_instruments()
 
 data_instruments = data_instruments[["Ticker", "quoteType", "currency",
-                                     "longName", "shortName", "industry", "sector", "city", 
-                                      "country", "industryKey", "industryDisp", "sectorKey", 
-                                      "sectorDisp", "longBusinessSummary", "financialCurrency"]]
+                                     "longName", "shortName", "industry", "sector", "city",
+                                     "country", "industryKey", "industryDisp", "sectorKey",
+                                     "sectorDisp", "longBusinessSummary", "financialCurrency"]]
 
-data = data_senators.merge(data_instruments, how = "left", on = "Ticker")
+data = data_senators.merge(data_instruments, how="left", on="Ticker")
 data = data.fillna("Unknown")
 
-#Lists for Interactive Buttons:
+# Lists for Interactive Buttons:
 list_of_politicians = data.Politician.unique()
 list_of_politicians.sort()
 
@@ -33,35 +33,33 @@ st.set_page_config(
     }
 )
 
-#Page definition
+# Page definition
 st.title("Get to know a politician 👨‍💼🏛️")
 st.write("On this page, you may browse through the investing history of the US politicians. \
             You may find there their trading activity, exposure to the market and many interesting information.")
-selected_politician = st.selectbox(
-                            "Select a politician:",
-                            options=list_of_politicians)
+selected_politician = st.selectbox("Select a politician:", options=list_of_politicians)
 
 st.title(selected_politician)
 
-#FIRST SECTION
+# FIRST SECTION
 st.subheader("General information")
 
-#Get information for interactive text
+# Get information for interactive text
 party_politician_value = party_politician(data, selected_politician)
-chamber_politician_value = chmaber_politician(data, selected_politician)
+chamber_politician_value = chamber_politician(data, selected_politician)
 first_trade_politician_value = first_trade_politician(data, selected_politician)
 last_trade_politician_value = last_trade_politician(data, selected_politician)
 total_invested_politician_value = total_invested_politician(data, selected_politician)
-total_sold_politician_value = total_sold_politician(data, selected_politician)                                 
+total_sold_politician_value = total_sold_politician(data, selected_politician)
 
 
-#Page content
+# Page content
 st.write(f"You are looking at the information about {selected_politician}. They are a member of {party_politician_value}.\
                 {selected_politician} is present in the {chamber_politician_value}. Their first documenteed transaction happend on {first_trade_politician_value}. \
             Since then, {selected_politician} has purchased instruments in total amount of {total_invested_politician_value} USD and has sold instruments \
             in total value of {total_sold_politician_value} USD. Their last documented transaction happened on {last_trade_politician_value}.")
 
-    # Button to show the bar chart (Total Investment per Month)
+# Button to show the bar chart (Total Investment per Month)
 st.write(f"To display the history of trading activity of {selected_politician}, select one of the tabs. Barchart displays their trading activity\
             summarized by month. Linechart displays the trading activity continuously:")
 
@@ -82,10 +80,10 @@ with tab2:
         st.error(f"Error generating chart: {e}")
 
 
-#SECOND SECTION
+# SECOND SECTION
 st.subheader("Exposure to the market")
 
-#GET the information for interactive text
+# GET the information for interactive text
 message_1 = most_trade_type_politician(data, selected_politician)
 message_2 = most_traded_volume_politician(data, selected_politician)
 message_3 = most_traded_sector_politician(data, selected_politician)
@@ -163,10 +161,7 @@ with tab_purchase:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[
-                    (data["Politician"] == selected_politician) & 
-                    (data["Transaction"] == "Purchase")
-                ].quoteType.unique()
+                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()
@@ -178,7 +173,7 @@ with tab_purchase:
 
         # Call the function for Purchases
         section_three_purchase_table(
-            data, list_of_types_of_instruments, selected_politician, 
+            data, list_of_types_of_instruments, selected_politician,
             "Purchase", selected_type_of_instrument_section_three
         )
 
@@ -193,10 +188,7 @@ with tab_sale:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[
-                    (data["Politician"] == selected_politician) & 
-                    (data["Transaction"] == "Sale")
-                ].quoteType.unique()
+                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()
@@ -209,12 +201,12 @@ with tab_sale:
 
         # Call the function for Sales
         section_three_purchase_table(
-            data, list_of_types_of_instruments, selected_politician, 
+            data, list_of_types_of_instruments, selected_politician,
             "Sale", selected_type_of_instrument_section_three
         )
 
 
-#FOURTH SECTION
+# FOURTH SECTION
 st.subheader("Most active days")
 
 most_active_purchase_value = most_active_purchase(data, selected_politician)
