@@ -3,6 +3,7 @@ This module contains the help functions for scraper.py module
 """
 import pandas as pd
 import numpy as np
+from Src.scraping.scraper import load_exclude_tickers
 
 # Tickers not found via yahoo finance
 exclude_tickers = ['T$A', 'BRK.B', 'GLAS', 'GLA', 'WY.Z', 'LSXMA', 'LSXMK', 'WNRP', 'CHUY', 'BRKB', 'HZNP',
@@ -76,7 +77,7 @@ def senators_data_preparation(data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame - The cleaned data.
     """
-
+    exclude_tickers = load_exclude_tickers().Ticker.to_list()
     # Extract the "Type" and "Amount" from the "Transaction" column
     data["Amount"] = data["Amount"].str.replace("[$,]", "", regex=True)
     data[["Min", "Max"]] = data["Amount"].str.split(" - ", expand=True)
@@ -160,7 +161,7 @@ def fin_ticker_preparation(data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame - The cleaned Tickers.
     """
-
+    exclude_tickers = load_exclude_tickers().Ticker.to_list()
     data = [ticker for ticker in data if ticker not in exclude_tickers]
 
     return data

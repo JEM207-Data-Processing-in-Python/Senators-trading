@@ -9,6 +9,7 @@ import os
 from pandas.tseries.holiday import USFederalHolidayCalendar
 from bs4 import BeautifulSoup
 import yfinance as yf
+import wikipedia
 from Src.scraping.scraper_utils import senators_data_preparation, fin_history_preparation, fin_info_preparation, fin_ticker_preparation
 
 
@@ -32,6 +33,32 @@ def load_financial_instruments():
     """
     try:
         data = pd.read_csv(os.path.join("Data", "financial_instruments.csv"))
+    except FileNotFoundError:
+        data = pd.DataFrame()
+
+    return data
+
+
+# TODO error handling, tests, class
+def load_senators_information():
+    """
+    Function that loads the senators information dataset
+    """
+    try:
+        data = pd.read_csv(os.path.join("Data", "senators_information.csv"))
+    except FileNotFoundError:
+        data = pd.DataFrame()
+
+    return data
+
+
+# TODO error handling, tests, class
+def load_exclude_tickers():
+    """
+    Function that loads the excluded tickers dataset
+    """
+    try:
+        data = pd.read_csv(os.path.join("Data", "exclude_tickers.csv"))
     except FileNotFoundError:
         data = pd.DataFrame()
 
@@ -168,6 +195,10 @@ def update_financial_instruments(current_data, senators_data):
         # Check if the asset has the necessary information
         if 'quoteType' not in symbol_info.columns or symbol.history(period="max").empty:
             print(f"No information found for {ticker}.")
+            exclude_tickers = load_exclude_tickers()
+            if ticker not in exclude_tickers["Ticker"].values:
+                exclude_tickers = exclude_tickers.append({"Ticker": ticker}, ignore_index=True)
+                exclude_tickers.to_csv(os.path.join("Data", "exclude_tickers.csv"), index=False)
             continue
 
         history = fin_history_preparation(symbol.history(period="max").reset_index()).set_index('Date').T
@@ -181,5 +212,53 @@ def update_financial_instruments(current_data, senators_data):
     current_data = pd.concat([current_data, update_data], ignore_index=True, join='outer')
     print("Data saved to financial_instruments.csv")
     current_data.to_csv(r"..\..\Data\financial_instruments.csv", index=False)
+
+    return
+
+
+# TODO error handling, tests, make the function more efficient and faster asynchronusly, class
+def update_senators_information(current_data, senators_data):
+    """
+    Function that updates the senators information dataset
+    """
+    # obtain all senators that are already in dataset
+    if current_data.empty:
+        current_data = pd.DataFrame()
+
+    senators = senators_data.Politician.drop_duplicates()
+
+    # Create empty dataframes for each type of asset
+    update_data = pd.DataFrame()
+    disambiguation_errors = []
+    i = 0
+    # Get the information about the assets
+    for senator in senators:
+        print(f"{senator} - {i}/{len(senators)}")
+        chamber = senators_data.loc[senators_data["Politician"] == senator, "Chamber"].values[0]
+        try:
+            summary = wikipedia.summary(f"{senator} (US {chamber} politician)")
+            page_url = wikipedia.page(f"{senator} (US {chamber} politician)").url
+        except wikipedia.exceptions.DisambiguationError:
+            print(f"Disambiguation error for {senator}. Skipping.")
+            disambiguation_errors.append(senator)
+            continue
+
+        if senator not in current_data["Politician"].values or current_data.loc[current_data["Politician"] == senator, "Information"].values[0] != summary:
+            senator_info = pd.DataFrame([{
+                "Politician": senator,
+                "Information": summary,
+                "Link": page_url,
+                "Picture": wikipedia.page(f"{senator} (US {chamber} politician)").images[0]
+            }])
+            update_data = pd.concat([update_data, senator_info], ignore_index=True)
+            i += 1
+
+    current_data = pd.concat([current_data, update_data], ignore_index=True, join='outer')
+    print("Data saved to senators_information.csv")
+    current_data.to_csv(r"Data\senators_information.csv", index=False)
+
+    if disambiguation_errors:
+        print("Disambiguation errors occurred for the following senators:")
+        print(disambiguation_errors)
 
     return

@@ -10,3 +10,4 @@ numpy
 yfinance
 BeautifulSoup4
 seaborn
+wikipeida

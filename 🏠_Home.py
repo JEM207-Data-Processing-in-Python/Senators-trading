@@ -4,6 +4,8 @@ This file contains the configuration of Streamlit app Home page and it also serv
 
 import streamlit as st
 
+import Src.scraping.scraper as scraper
+
 # Set the page configuration
 st.set_page_config(
     page_title="Home",
@@ -17,3 +19,5 @@ st.set_page_config(
 
 st.title("Main App page")
 st.write("Navigate to other pages!")
+
+scraper.update_senators_information(scraper.load_senators_information(), scraper.load_senators_trading())
