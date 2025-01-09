@@ -6,6 +6,7 @@ import os
 import streamlit as st
 
 from Src.scraping.scraper import Senators_Trading_Updater, Financial_Instruments_Updater, Senators_Information_Updater
+from Src.streamlit.home_page import general_information
 
 # Set the page configuration
 st.set_page_config(
@@ -26,13 +27,16 @@ with col2:
 # Title of page
 st.title("U.S. Senator's Trading Visualization")
 
+# General Information
+unique_politicians, unique_tickers, sum_invested, first_trans = general_information()
+
 # About the project
 st.subheader("About the project")
 st.write(
-    """
+    f"""
     This project aims to visualize U.S. senator's financial trading activities based on their financial disclosures. The financial disclosure reports provide greater legitimacy for the general public regarding senator's investment activities, ensuring that politicians do not create or favor laws that could benefit their own investments.
 
-    It features interactive charts to explore popular investment sectors, trends, and profit standings among senators. It also places senators' trading activities in the context of the market and the general public. The goals of the project are as follows:
+    It features interactive charts of over **{unique_politicians}** to explore popular investment sectors, trends of over **{unique_tickers}** financial isntruments and profit standings among senators which invested total of **{sum_invested:,.0f} $** since year **{first_trans}**. It also places senators' trading activities in the context of the market and the general public. The sub-parts of the project feature:
 
     - **[Politician Finder](Politician_Finder)**: Provides detailed information about individual politicians. It shows general information about the politician, their trading activity, exposure to the market, and many other interesting insights.
 

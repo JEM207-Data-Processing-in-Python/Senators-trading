@@ -2,9 +2,12 @@
 This file contains the configuration of Streamlit app Politician Finder page.
 """
 import streamlit as st
-from Src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
+
 from Src.scraping.scraper import DataLoader
-from Src.streamlit.page_1_data_gather import party_politician, first_trade_politician, last_trade_politician, total_invested_politician, total_sold_politician, most_trade_type_politician, most_traded_volume_politician, most_traded_sector_politician, most_sold_sector_politician, most_active_purchase, most_active_sell, section_three_purchase_table, chamber_politician
+from Src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
+from Src.streamlit.page_1_data_gather import party_politician, first_trade_politician, last_trade_politician, total_invested_politician, total_sold_politician
+from Src.streamlit.page_1_data_gather import most_trade_type_politician, most_traded_volume_politician, most_traded_sector_politician, most_sold_sector_politician
+from Src.streamlit.page_1_data_gather import most_active_purchase, most_active_sell, section_three_purchase_table, chamber_politician
 
 # Original data
 data_senators = DataLoader().load_senators_trading()
@@ -29,10 +32,21 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
     menu_items={
-        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations.\n\n *Made by Dario Mikuš and Michal Smieško*"
+        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations."
     }
 )
-
+st.markdown(
+    """
+    <style>
+        button[data-baseweb="tab"] {
+            font-size: 24px;
+            margin: 0;
+            width: 100%;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 # Page definition
 st.title("Get to know a politician 👨‍💼🏛️")
 st.write("On this page, you may browse through the investing history of the US politicians. \
