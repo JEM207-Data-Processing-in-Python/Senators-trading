@@ -3,12 +3,12 @@ This file contains the configuration of Streamlit app Politician Finder page.
 """
 import streamlit as st
 from Src.visualization.graphs import pie_chart_advanced, grouping_for_graph, five_days_graph, grouping_for_barchart
-from Src.scraping.scraper import load_senators_trading, load_financial_instruments
+from Src.scraping.scraper import DataLoader
 from Src.streamlit.page_1_data_gather import party_politician, first_trade_politician, last_trade_politician, total_invested_politician, total_sold_politician, most_trade_type_politician, most_traded_volume_politician, most_traded_sector_politician, most_sold_sector_politician, most_active_purchase, most_active_sell, section_three_purchase_table, chamber_politician
 
 # Original data
-data_senators = load_senators_trading()
-data_instruments = load_financial_instruments()
+data_senators = DataLoader().load_senators_trading()
+data_instruments = DataLoader().load_financial_instruments()
 
 data_instruments = data_instruments[["Ticker", "quoteType", "currency",
                                      "longName", "shortName", "industry", "sector", "city",

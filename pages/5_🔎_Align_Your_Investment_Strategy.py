@@ -2,12 +2,24 @@
 import streamlit as st
 import pandas as pd
 from Src.visualization.tables import data_for_strategy_align_type, data_for_strategy_align_sector
-from Src.scraping.scraper import load_senators_trading, load_financial_instruments
+from Src.scraping.scraper import DataLoader
 from Src.streamlit.page_5_functions import best_alignment_sector, equity_alignment_politician_sector, best_alignment_instrument, equity_alignment_politician_instrument
 
 # Original data
-data_senators = load_senators_trading()
-data_instruments = load_financial_instruments()
+data_senators = DataLoader().load_senators_trading()
+data_instruments = DataLoader().load_financial_instruments()
+
+
+# Set the page configuration
+st.set_page_config(
+    page_title="Align Your Investment Strategy 📰",
+    page_icon="👀",
+    layout="wide",
+    initial_sidebar_state="auto",
+    menu_items={
+        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations.\n\n *Made by Dario Mikuš and Michal Smieško*"
+    }
+)
 
 data_instruments = data_instruments[["Ticker", "quoteType", "currency",
                                      "longName", "shortName", "industry", "sector", "city",

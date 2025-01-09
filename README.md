@@ -48,7 +48,7 @@ pip install -r requirements_dev.txt  # Install dependencies for testing
 ### 4. Run the project
 
 ```sh
-streamlit run 🏠_Home.py
+streamlit run 🏠_Home_page.py
 ```
 
 ## How to code and contribute

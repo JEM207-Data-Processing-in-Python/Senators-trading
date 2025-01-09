@@ -1,4 +1,56 @@
 Ticker,Politician,Party,Chamber,Transaction,Traded,Filed,Invested
+GE,Shelley Moore Capito,R,Senate,Purchase,2024-12-27,2025-01-06,8000.5
+UNH,Shelley Moore Capito,R,Senate,Sale,2024-12-20,2025-01-06,-8000.5
+MSFT,Shelley Moore Capito,R,Senate,Sale,2024-12-16,2025-01-06,-8000.5
+LOW,Shelley Moore Capito,R,Senate,Sale,2024-12-13,2025-01-06,-8000.5
+AVGO,Shelley Moore Capito,R,Senate,Purchase,2024-12-12,2025-01-06,8000.5
+WFC,Mitch McConnell,R,Senate,Purchase,2024-12-02,2025-01-04,8000.5
+PDBC,Markwayne Mullin,R,Senate,Sale,2024-12-26,2025-01-03,-375000.5
+GICIX,Markwayne Mullin,R,Senate,Purchase,2024-12-26,2025-01-03,75000.5
+CFSSX,Markwayne Mullin,R,Senate,Purchase,2024-12-26,2025-01-03,175000.5
+VNQ,Markwayne Mullin,R,Senate,Purchase,2024-12-26,2025-01-03,8000.5
+IEMG,Markwayne Mullin,R,Senate,Purchase,2024-12-26,2025-01-03,75000.5
+PCLPX,Markwayne Mullin,R,Senate,Purchase,2024-12-26,2025-01-03,375000.5
+AY,Thomas R. Carper,D,Senate,Sale,2024-12-13,2025-01-02,-8000.5
+ELF,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+GS,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+ETN,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+OLLI,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+ELF,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+GS,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+SFM,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+AXON,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+BMI,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+LRN,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+OLLI,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+FRPT,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+CYBR,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+CYBR,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+LRN,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+ETN,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+AXON,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+SFM,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+FRPT,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-32500.5
+BMI,Markwayne Mullin,R,Senate,Sale,2024-12-18,2024-12-31,-8000.5
+AMAT,Markwayne Mullin,R,Senate,Purchase,2024-12-11,2024-12-31,32500.5
+PEP,Markwayne Mullin,R,Senate,Sale,2024-12-11,2024-12-31,-32500.5
+ABT,Markwayne Mullin,R,Senate,Sale,2024-12-11,2024-12-31,-32500.5
+LRN,Markwayne Mullin,R,Senate,Purchase,2024-07-30,2024-12-31,8000.5
+EQC,Bill Hagerty,R,Senate,Sale,2024-12-13,2024-12-30,-8000.5
+META,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+NOW,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+AMZN,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+LLY,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+JNJ,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+ADBE,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+AMAT,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+GILD,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+HSY,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+MSFT,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+NSC,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+DUK,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+NVDA,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
+CAT,Marjorie Taylor Greene,R,House,Purchase,2024-12-24,2024-12-27,8000.5
 TSLA,Michael Guest,R,House,Purchase,2024-11-08,2024-12-20,8000.5
 AMZN,Michael Guest,R,House,Purchase,2024-11-08,2024-12-20,8000.5
 MNDY,Michael Guest,R,House,Purchase,2024-11-08,2024-12-20,8000.5

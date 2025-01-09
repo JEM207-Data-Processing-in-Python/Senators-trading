@@ -3,32 +3,8 @@ This script contains the function that creates a line graph showing the cumulati
 """
 import plotly.graph_objects as go
 import pandas as pd
-from Src.scraping.scraper import load_senators_trading
 from Src.visualization.graphs_utils import get_the_color, same_color_across_pie_charts
 from Src.streamlit.page_1_data_gather import five_days
-
-
-# TODO error handling, tests, class
-def pie_chart_chamber():
-    """
-    Create a pie chart showing the number of politicians in each chamber.
-    """
-    data = load_senators_trading()
-    help_df = data.groupby("Chamber")["Politician"].nunique().reset_index()
-
-    labels = help_df["Chamber"]
-    values = help_df["Politician"]
-
-    # Create the Plotly pie chart
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.3)])
-
-    # Update layout (title)
-    fig.update_layout(
-        title="Number of Politicians by Chamber",
-        template="plotly_white"
-    )
-
-    return fig
 
 
 # TODO error handling, tests, class
