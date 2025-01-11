@@ -1,5 +1,6 @@
 """
-Scraper functions for obtaining data from the internet - senators trading, financial instruments, and senators' information.
+Scraper functions for obtaining data from the internet - senators trading,
+financial instruments, and senators' information.
 """
 
 import os
@@ -16,12 +17,21 @@ import yfinance as yf
 import streamlit as st
 from bs4 import BeautifulSoup
 
-from Src.scraping.scraper_utils_1 import load_data, get_last_current_data, delete_exclude_tickers, senators_data_preparation
-from Src.scraping.scraper_utils_2 import fin_history_preparation, fin_info_preparation, fin_ticker_preparation, is_data_up_to_date
-from Src.scraping.scraper_utils_3 import add_to_exclude_tickers, get_profile_picture
+from Src.scraping.scraper_utils_1 import (
+    load_data, get_last_current_data, delete_exclude_tickers,
+    senators_data_preparation
+)
+from Src.scraping.scraper_utils_2 import (
+    fin_history_preparation, fin_info_preparation, fin_ticker_preparation,
+    is_data_up_to_date
+)
+from Src.scraping.scraper_utils_3 import (
+    add_to_exclude_tickers, get_profile_picture
+)
 
 # Suppress streamlit logs
-logging.getLogger("streamlit.runtime.scriptrunner_utils.script_run_context").setLevel(logging.ERROR)
+logging.getLogger("streamlit.runtime.scriptrunner_utils.script_run_context")\
+    .setLevel(logging.ERROR)
 logging.getLogger("streamlit").setLevel(logging.CRITICAL)
 
 
@@ -67,7 +77,8 @@ class Senators_Trading_Updater:
 
     def update_senators_trading(self):
         """
-        Function that updates the senators trading dataset by iterating through the pages of the table on the website.
+        Function that updates the senators trading dataset by iterating through
+        the pages of the table on the website.
         """
         try:
             current_data = self.data_loader.load_senators_trading()
@@ -86,7 +97,10 @@ class Senators_Trading_Updater:
                 response = self.fetch_data(page)
 
                 if response is None or response.status_code != 200:
-                    status_text.text(f"Failed to fetch data from table: {response.status_code if response else 'No Response'}")
+                    status_text.text(
+                        f"Failed to fetch data from table: "
+                        f"{response.status_code if response else 'No Response'}"
+                    )
                     break
 
                 response_json = response.json()
@@ -95,21 +109,37 @@ class Senators_Trading_Updater:
                 soup = BeautifulSoup(html_content, 'html.parser')
                 rows = soup.find_all('tr', class_='data-table__row')
                 progress_bar.progress(min(page / max_pages, 1.0))
-                status_text.text(f"Processing batch {page}/{max_pages}, each batch contains 10000 records.")
+                status_text.text(
+                    f"Processing batch {page}/{max_pages}, each batch contains "
+                    "10000 records."
+                )
 
                 for row in rows:
                     row_data = self.extract_row_data(row, exclude_tickers)
                     new_data = pd.concat([new_data, row_data], ignore_index=True)
 
                     if np.array_equal(last_current_data.values, row_data.values):
-                        status_text.text("Encountered record that we have already in the dataset.")
+                        status_text.text(
+                            "Encountered record that we have already in the "
+                            "dataset."
+                        )
                         progress_bar.progress(100)
                         new_data = new_data.iloc[:-1]
-                        current_data = pd.concat([new_data, current_data], ignore_index=True)
-                        current_data = delete_exclude_tickers(exclude_tickers, current_data)
+                        current_data = pd.concat(
+                            [new_data, current_data], ignore_index=True
+                        )
+                        current_data = delete_exclude_tickers(
+                            exclude_tickers, current_data
+                        )
                         time.sleep(2)
-                        status_text.text(f"All {len(new_data)} new records from the internet loaded successfully and saved to senators_trading.csv")
-                        current_data.to_csv(os.path.join("Data", "senators_trading.csv"), index=False)
+                        status_text.text(
+                            "All {len(new_data)} new records from the internet "
+                            "loaded successfully and saved to senators_trading.csv"
+                        )
+                        current_data.to_csv(
+                            os.path.join("Data", "senators_trading.csv"),
+                            index=False
+                        )
                         return None
 
                 page += 1
@@ -117,11 +147,18 @@ class Senators_Trading_Updater:
             current_data = pd.concat([new_data, current_data], ignore_index=True)
             current_data = delete_exclude_tickers(exclude_tickers, current_data)
             progress_bar.progress(100)
-            status_text.text(f"All {len(new_data)} new records from the internet saved to senators_trading.csv")
-            current_data.to_csv(os.path.join("Data", "senators_trading.csv"), index=False)
+            status_text.text(
+                f"All {len(new_data)} new records from the internet saved to "
+                "senators_trading.csv"
+            )
+            current_data.to_csv(
+                os.path.join("Data", "senators_trading.csv"), index=False
+            )
 
         except Exception as e:
-            logging.error(f"An error occurred while updating senators trading data: {e}")
+            logging.error(
+                f"An error occurred while updating senators trading data: {e}"
+            )
 
     def fetch_data(self, page):
         data = {
@@ -137,7 +174,9 @@ class Senators_Trading_Updater:
             response.raise_for_status()
             return response
         except requests.RequestException as e:
-            logging.error(f"An error occurred while fetching data from the server: {e}")
+            logging.error(
+                f"An error occurred while fetching data from the server: {e}"
+            )
             return None
 
     def extract_row_data(self, row, exclude_tickers):
@@ -145,9 +184,12 @@ class Senators_Trading_Updater:
             ticker = row.select_one('td[data-title="Stock"]').contents[0].strip()
             politician = row.select_one('td[data-title="Politician"] a').text.strip()
             party = row.select_one('td[data-title="Politician"] abbr').text.strip()
-            chamber = row.select_one('td[data-title="Politician"] div small').contents[-1].strip()
-            transaction = row.select_one('td[data-title="Transaction"] span').text.strip().split()[0]
-            amount = row.select_one('td[data-title="Transaction"] div small').text.strip()
+            chamber = row.select_one('td[data-title="Politician"] div small')\
+                .contents[-1].strip()
+            transaction = row.select_one('td[data-title="Transaction"] span')\
+                .text.strip().split()[0]
+            amount = row.select_one('td[data-title="Transaction"] div small')\
+                .text.strip()
             traded_date = row.select_one('td[data-title="Traded"] div').text.strip()
             filed_date = row.select_one('td[data-title="Filed"] div').text.strip()
             row_data = pd.DataFrame([{
@@ -174,7 +216,8 @@ class Financial_Instruments_Updater:
 
     def update_financial_instruments(self):
         """
-        Function that updates the financial instruments dataset with a progress bar using pooling.
+        Function that updates the financial instruments dataset with a progress
+        bar using pooling.
         """
         current_data = self.data_loader.load_financial_instruments()
         senators_data = self.data_loader.load_senators_trading()
@@ -185,10 +228,16 @@ class Financial_Instruments_Updater:
 
         tickers = senators_data.Ticker.drop_duplicates()
         tickers = fin_ticker_preparation(tickers, exclude_tickers)
-        tickers = [ticker for ticker in tickers if not is_data_up_to_date(current_data, ticker)]
+        tickers = [ticker for ticker in tickers if not is_data_up_to_date(
+            current_data, ticker
+        )]
         progress_bar = st.progress(0)
         status_text = st.empty()
-        status_text.text(f"Processing {len(tickers)} tickers. Due to API requests limitations, this may take in tens of minutes. Please wait on this page...")
+        status_text.text(
+            f"Processing {len(tickers)} tickers. Due to API requests "
+            "limitations, this may take in tens of minutes. Please wait on "
+            "this page..."
+        )
 
         with Pool(processes=2) as pool:
             results = pool.map(self.process_ticker, [
@@ -197,23 +246,48 @@ class Financial_Instruments_Updater:
             ])
         if results:
             valid_results, excluded_ticker_results = zip(*results)
-            valid_results = [result for result in valid_results if result is not None and not result.empty]
+            valid_results = [
+                result for result in valid_results if result is not None and
+                not result.empty
+            ]
             progress_bar.progress(100)
-            excluded_ticker_dfs = [ex for ex in excluded_ticker_results if ex is not None and not ex.empty]
+            excluded_ticker_dfs = [
+                ex for ex in excluded_ticker_results if ex is not None and
+                not ex.empty
+            ]
             if excluded_ticker_dfs:
-                new_excluded_tickers = pd.concat(excluded_ticker_dfs, ignore_index=True)
-                new_excluded_tickers = new_excluded_tickers.drop_duplicates(subset=['Ticker'])
-                new_excluded_tickers.to_csv(os.path.join("Data", "exclude_tickers.csv"), index=False)
+                new_excluded_tickers = pd.concat(
+                    excluded_ticker_dfs, ignore_index=True
+                )
+                new_excluded_tickers = new_excluded_tickers.drop_duplicates(
+                    subset=['Ticker']
+                )
+                new_excluded_tickers.to_csv(
+                    os.path.join("Data", "exclude_tickers.csv"), index=False
+                )
 
             if valid_results:
                 update_data = pd.concat(valid_results, ignore_index=True)
-                current_data = pd.concat([current_data, update_data], ignore_index=True, join='outer')
+                current_data = pd.concat(
+                    [current_data, update_data], ignore_index=True, join='outer'
+                )
                 current_data = current_data.drop_duplicates(subset=['Ticker'])
-                current_data = current_data.dropna(subset=[current_data.columns[-1]]).reset_index(drop=True)
-                status_text.text(f"All {len(update_data)} new records from the internet loaded successfully and saved to financial_instruments.csv")
-                current_data.to_csv(os.path.join("Data", "financial_instruments.csv"), index=False)
+                current_data = current_data.dropna(
+                    subset=[current_data.columns[-1]]
+                ).reset_index(drop=True)
+                status_text.text(
+                    f"All {len(update_data)} new records from the internet "
+                    "loaded successfully and saved to financial_instruments.csv"
+                )
+                current_data.to_csv(
+                    os.path.join("Data", "financial_instruments.csv"),
+                    index=False
+                )
             else:
-                status_text.text(f"All {len(valid_results)} new records from the internet loaded successfully and saved to financial_instruments.csv")
+                status_text.text(
+                    f"All {len(valid_results)} new records from the internet "
+                    "loaded successfully and saved to financial_instruments.csv"
+                )
         else:
             status_text.text("No new records were found.")
 
@@ -280,14 +354,23 @@ class Senators_Information_Updater:
 
     def update_senators_information(self):
         """
-        Function that updates the senators' information dataset with multiprocessing.
+        Function that updates the senators' information dataset with
+        multiprocessing.
         """
         senators_data = self.data_loader.load_senators_trading()
-        senators = senators_data.drop_duplicates(subset=['Politician'])[['Politician', 'Chamber']].reset_index(drop=True)
-        senator_info_args = [(index, len(senators), row['Politician'], row['Chamber']) for index, row in senators.iterrows()]
+        senators = senators_data.drop_duplicates(subset=['Politician'])[
+            ['Politician', 'Chamber']
+        ].reset_index(drop=True)
+        senator_info_args = [
+            (index, len(senators), row['Politician'], row['Chamber'])
+            for index, row in senators.iterrows()
+        ]
         progress_bar = st.progress(0)
         status_text = st.empty()
-        status_text.text(f"Processing senators information for {len(senators)} senators. Please wait...")
+        status_text.text(
+            f"Processing senators information for {len(senators)} senators. "
+            "Please wait..."
+        )
 
         with Pool(os.cpu_count() // 2) as pool:
             results = pool.map(self.process_senator, senator_info_args)

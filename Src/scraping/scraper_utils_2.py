@@ -14,10 +14,12 @@ def fin_history_preparation(data: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame - The cleaned history data.
     """
     try:
-        # Filter from 2013, keep only the "Close" and "Date" columns, round the "Close" values, and change the date format
+        # Filter from 2013, keep only the "Close" and "Date" columns, round the
+        # "Close" values, and change the date format
         data = data.loc[data["Date"] >= "2013-01-01", ["Close", "Date"]]
         data["Close"] = data["Close"].round(2)
-        data["Date"] = pd.to_datetime(data["Date"], errors='coerce').dt.strftime("%Y-%m-%d")
+        data["Date"] = pd.to_datetime(data["Date"], errors='coerce').dt.strftime(
+            "%Y-%m-%d")
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise
@@ -27,7 +29,8 @@ def fin_history_preparation(data: pd.DataFrame) -> pd.DataFrame:
 
 def fin_info_preparation(data: pd.DataFrame) -> pd.DataFrame:
     """
-    The function chooses only the relevant columns from the financial information.
+    The function chooses only the relevant columns from the financial
+    information.
     Args:
         data: pd.DataFrame - The financial information to be cleaned.
     Returns:
@@ -52,9 +55,11 @@ def fin_ticker_preparation(data: pd.DataFrame, exclude_tickers: pd.DataFrame) ->
     """
     Remove the tickers that are not found via Yahoo.
     Args:
-        data: pd.DataFrame - The tickers to be filtered (Assumed to be a list of tickers).
+        data: pd.DataFrame - The tickers to be filtered (Assumed to be a list
+        of tickers).
     Returns:
-        pd.DataFrame - The cleaned tickers, excluding those in the exclude_tickers.csv file.
+        pd.DataFrame - The cleaned tickers, excluding those in the
+        exclude_tickers.csv file.
     """
     try:
         # Exclude the tickers that are in the exclude_tickers
@@ -72,7 +77,8 @@ def is_data_up_to_date(current_data: pd.DataFrame, ticker: str) -> bool:
     Check if the data for a given ticker is up-to-date.
 
     Parameters:
-    - current_data: A pandas DataFrame containing current financial instrument data.
+    - current_data: A pandas DataFrame containing current financial instrument
+    data.
     - ticker: A string representing the stock ticker.
 
     Returns:

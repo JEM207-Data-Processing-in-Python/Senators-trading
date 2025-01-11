@@ -10,7 +10,8 @@ def party_politician(data: pd.DataFrame, selected_politician: str) -> str:
 
     Parameters:
     - data (pd.DataFrame): The dataset containing politician information.
-    - selected_politician (str): The name of the politician to look for in the dataset.
+    - selected_politician (str): The name of the politician to look for in the
+    dataset.
 
     Returns:
     - str: The name of the political party the selected politician belongs to.
@@ -20,7 +21,8 @@ def party_politician(data: pd.DataFrame, selected_politician: str) -> str:
     - Error handling should be added for invalid or missing politician names.
     """
     # Get information for interactive text
-    party_politician = data[data["Politician"] == selected_politician]["Party"].unique()
+    party_politician = data[data["Politician"] == selected_politician][
+        "Party"].unique()
 
     # Determine the party based on the value in the 'Party' column
     if party_politician == "R":
@@ -39,7 +41,8 @@ def first_trade_politician(data: pd.DataFrame, selected_politician: str) -> str:
 
     Parameters:
     - data (pd.DataFrame): The dataset containing politician trading data.
-    - selected_politician (str): The name of the politician whose first trade is to be retrieved.
+    - selected_politician (str): The name of the politician whose first trade
+    is to be retrieved.
 
     Returns:
     - str: The date of the first trade for the selected politician.
@@ -47,8 +50,10 @@ def first_trade_politician(data: pd.DataFrame, selected_politician: str) -> str:
     Note:
     - Error handling should be added for missing or incorrect politician names.
     """
-    # Get the date of the first trade by filtering the data for the selected politician
-    first_trade_politician = data[data["Politician"] == selected_politician]["Traded"].min()
+    # Get the date of the first trade by filtering the data for the selected
+    # politician
+    first_trade_politician = data[data["Politician"] == selected_politician][
+        "Traded"].min()
 
     return first_trade_politician
 
@@ -59,7 +64,8 @@ def last_trade_politician(data: pd.DataFrame, selected_politician: str) -> str:
 
     Parameters:
     - data (pd.DataFrame): The dataset containing politician trading data.
-    - selected_politician (str): The name of the politician whose last trade is to be retrieved.
+    - selected_politician (str): The name of the politician whose last trade is
+    to be retrieved.
 
     Returns:
     - str: The date of the last trade for the selected politician.
@@ -67,29 +73,36 @@ def last_trade_politician(data: pd.DataFrame, selected_politician: str) -> str:
     Note:
     - Error handling should be added for missing or incorrect politician names.
     """
-    # Get the date of the last trade by filtering the data for the selected politician
-    last_trade_politician = data[data["Politician"] == selected_politician]["Traded"].max()
+    # Get the date of the last trade by filtering the data for the selected
+    # politician
+    last_trade_politician = data[data["Politician"] == selected_politician][
+        "Traded"].max()
 
     return last_trade_politician
 
 
 def total_invested_politician(data: pd.DataFrame, selected_politician: str) -> str:
     """
-    Calculates the total amount invested by the selected politician in purchases.
+    Calculates the total amount invested by the selected politician in
+    purchases.
 
     Parameters:
     - data (pd.DataFrame): The dataset containing politician transaction data.
-    - selected_politician (str): The name of the politician whose total investments are to be calculated.
+    - selected_politician (str): The name of the politician whose total
+    investments are to be calculated.
 
     Returns:
-    - str: The total amount invested in purchases formatted with commas for thousands.
+    - str: The total amount invested in purchases formatted with commas for
+    thousands.
 
     Note:
     - Error handling should be added for missing or incorrect politician names.
     """
-    # Calculate total invested by the selected politician on purchase transactions
+    # Calculate total invested by the selected politician on purchase
+    # transactions
     total_invested_politician = data[
-        (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")
+        (data["Politician"] == selected_politician) &
+        (data["Transaction"] == "Purchase")
     ]["Invested"].sum()
 
     # Format the result for readability
@@ -104,7 +117,8 @@ def total_sold_politician(data: pd.DataFrame, selected_politician: str) -> str:
 
     Parameters:
     - data (pd.DataFrame): The dataset containing politician transaction data.
-    - selected_politician (str): The name of the politician whose total sales are to be calculated.
+    - selected_politician (str): The name of the politician whose total sales
+    are to be calculated.
 
     Returns:
     - str: The total amount sold in sales formatted with commas for thousands.
@@ -114,12 +128,14 @@ def total_sold_politician(data: pd.DataFrame, selected_politician: str) -> str:
     """
     help_df = data.copy()
 
-    # Reverse the 'Invested' value for sale transactions to ensure a negative total
+    # Reverse the 'Invested' value for sale transactions to ensure a negative
+    # total
     help_df["Invested"] = -help_df["Invested"]
 
     # Calculate total sold by the selected politician on sale transactions
     total_sold_politician = help_df[
-        (help_df["Politician"] == selected_politician) & (help_df["Transaction"] == "Sale")
+        (help_df["Politician"] == selected_politician) &
+        (help_df["Transaction"] == "Sale")
     ]["Invested"].sum()
 
     # Format the result for readability

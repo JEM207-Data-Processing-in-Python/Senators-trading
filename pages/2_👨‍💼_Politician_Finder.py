@@ -5,9 +5,18 @@ import streamlit as st
 
 from Src.scraping.scraper import DataLoader
 from Src.visualization.graphs_politician_finder import Politician_Data_Visualizer
-from Src.streamlit.politician_finder_1 import party_politician, first_trade_politician, last_trade_politician, total_invested_politician, total_sold_politician
-from Src.streamlit.politician_finder_2 import most_trade_type_politician, most_traded_volume_politician, most_traded_sector_politician, most_sold_sector_politician
-from Src.streamlit.politician_finder_3 import most_active_purchase, most_active_sell, section_three_purchase_table, chamber_politician, wikipedia_information
+from Src.streamlit.politician_finder_1 import (
+    party_politician, first_trade_politician, last_trade_politician,
+    total_invested_politician, total_sold_politician
+)
+from Src.streamlit.politician_finder_2 import (
+    most_trade_type_politician, most_traded_volume_politician,
+    most_traded_sector_politician, most_sold_sector_politician
+)
+from Src.streamlit.politician_finder_3 import (
+    most_active_purchase, most_active_sell, section_three_purchase_table,
+    chamber_politician, wikipedia_information
+)
 
 # Set the page configuration
 st.set_page_config(
@@ -16,7 +25,12 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
     menu_items={
-        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations."
+        'About': (
+            "### US politicians Trading visualization\n An interactive web "
+            "application visualizing U.S. Senators' financial trading activities, "
+            "analyzing potential insider trading, and offering portfolio-based "
+            "recommendations."
+        )
     }
 )
 st.markdown(
@@ -38,16 +52,21 @@ st.title("Get to know a U.S. politician 👨‍💼🏛️")
 # About the page
 st.subheader("About the page")
 st.write("""
-    On this page, you can explore the investment history of U.S. politicians from the Senate and House. You’ll find detailed insights into their trading activity, market exposure, and other fascinating information about their investment disclosures.
+    On this page, you can explore the investment history of U.S. politicians from
+    the Senate and House. You’ll find detailed insights into their trading activity,
+    market exposure, and other fascinating information about their investment
+    disclosures.
 """)
 
 # Original data
 data_senators = DataLoader().load_senators_trading()
 data_instruments = DataLoader().load_financial_instruments()
 
-data_instruments = data_instruments[["Ticker", "quoteType", "longName", "shortName",
-                                     "city", "country", "industryKey", "sectorKey",
-                                     "longBusinessSummary", "financialCurrency", "currency"]]
+data_instruments = data_instruments[[
+    "Ticker", "quoteType", "longName", "shortName", "city", "country",
+    "industryKey", "sectorKey", "longBusinessSummary", "financialCurrency",
+    "currency"
+]]
 
 data = data_senators.merge(data_instruments, how="left", on="Ticker")
 data = data.fillna("Unknown")
@@ -74,10 +93,15 @@ total_invested_politician_value = total_invested_politician(data, selected_polit
 total_sold_politician_value = total_sold_politician(data, selected_politician)
 information, url, picture = wikipedia_information(selected_politician)
 
-content = f"""
-    You are looking at the information about **{selected_politician}**, a member of the **{party_politician_value}** in the **{chamber_politician_value}**. Their first documented transaction occurred on **{first_trade_politician_value}**.
-    Since then, **{selected_politician}** has purchased instruments totaling **{total_invested_politician_value} USD** and sold instruments totaling **{total_sold_politician_value} USD**. Their last documented transaction occurred on **{last_trade_politician_value}**.
-"""
+content = (
+    f"You are looking at the information about **{selected_politician}**, a member "
+    f"of the **{party_politician_value}** in the **{chamber_politician_value}**. "
+    f"Their first documented transaction occurred on **{first_trade_politician_value}**. "
+    f"Since then, **{selected_politician}** has purchased instruments totaling "
+    f"**{total_invested_politician_value} USD** and sold instruments totaling "
+    f"**{total_sold_politician_value} USD**. Their last documented transaction "
+    f"occurred on **{last_trade_politician_value}**."
+)
 if information is not None:
     content += f"\n{information}"
 
@@ -98,16 +122,20 @@ else:
 # General information
 st.subheader("History of trading activity")
 st.write(f"""
-        Explore the trading history of {selected_politician} through the tabs provided. The Barchart offers a monthly summary of their trading activity, highlighting trends in purchases and sales, while the Linechart presents a continuous timeline of transactions for a detailed view of their trading patterns.
-        """)
+    Explore the trading history of {selected_politician} through the tabs
+    provided. The Barchart offers a monthly summary of their trading activity,
+    highlighting trends in purchases and sales, while the Linechart presents a
+    continuous timeline of transactions for a detailed view of their trading
+    patterns.
+""")
 
 # Graphs
 tab1, tab2 = st.tabs(["📊 BARCHART", "📈 LINECHART"])
 with tab1:
     try:
         visualizer = Politician_Data_Visualizer(data)
-        barchart_invested_in_time = visualizer.grouping_for_barchart("Politician", selected_politician)
-        st.plotly_chart(barchart_invested_in_time, use_container_width=True, use_svg=True)
+        barchart_invested_time = visualizer.grouping_for_barchart("Politician", selected_politician)
+        st.plotly_chart(barchart_invested_time, use_container_width=True, use_svg=True)
     except Exception as e:
         st.error(f"Error generating chart: {e}")
 
@@ -135,7 +163,7 @@ st.write(f"{message_1} {message_2} {message_3} {message_4}")
 # Create tabs for "Purchase" and "Sale"
 tabs = st.tabs(["Purchase 📈", "Sale 📉"])
 with tabs[0]:
-    if message_3 == "They has not invested in EQUITY either.":
+    if message_3 == "They have not invested in EQUITY either.":
         st.write("There are no documented Purchases.")
     else:
         purchase = "Purchase"
@@ -143,7 +171,9 @@ with tabs[0]:
         with col1:
             try:
                 visualizer = Politician_Data_Visualizer(data)
-                chart_pie_chart_exposure_1 = visualizer.pie_chart_advanced(purchase, "quoteType", selected_politician)
+                chart_pie_chart_exposure_1 = visualizer.pie_chart_advanced(
+                    purchase, "quoteType", selected_politician
+                )
                 st.plotly_chart(chart_pie_chart_exposure_1, use_container_width=True, use_svg=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")
@@ -151,7 +181,9 @@ with tabs[0]:
         with col2:
             try:
                 visualizer = Politician_Data_Visualizer(data)
-                chart_pie_chart_exposure_2 = visualizer.pie_chart_advanced(purchase, "sectorKey", selected_politician)
+                chart_pie_chart_exposure_2 = visualizer.pie_chart_advanced(
+                    purchase, "sectorKey", selected_politician
+                )
                 st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True, use_svg=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")
@@ -165,7 +197,9 @@ with tabs[1]:
         with col1:
             try:
                 visualizer = Politician_Data_Visualizer(data)
-                chart_pie_chart_exposure_1 = visualizer.pie_chart_advanced(purchase, "quoteType", selected_politician)
+                chart_pie_chart_exposure_1 = visualizer.pie_chart_advanced(
+                    purchase, "quoteType", selected_politician
+                )
                 st.plotly_chart(chart_pie_chart_exposure_1, use_container_width=True, use_svg=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")
@@ -173,7 +207,9 @@ with tabs[1]:
         with col2:
             try:
                 visualizer = Politician_Data_Visualizer(data)
-                chart_pie_chart_exposure_2 = visualizer.pie_chart_advanced(purchase, "sectorKey", selected_politician)
+                chart_pie_chart_exposure_2 = visualizer.pie_chart_advanced(
+                    purchase, "sectorKey", selected_politician
+                )
                 st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True, use_svg=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")
@@ -199,7 +235,8 @@ with tab_purchase:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].quoteType.unique()
+                data[(data["Politician"] == selected_politician) &
+                     (data["Transaction"] == "Purchase")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()
@@ -222,7 +259,8 @@ with tab_sale:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].quoteType.unique()
+                data[(data["Politician"] == selected_politician) &
+                     (data["Transaction"] == "Sale")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()
