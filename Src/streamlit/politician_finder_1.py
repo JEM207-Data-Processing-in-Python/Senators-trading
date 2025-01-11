@@ -101,8 +101,7 @@ def total_invested_politician(data: pd.DataFrame, selected_politician: str) -> s
     # Calculate total invested by the selected politician on purchase
     # transactions
     total_invested_politician = data[
-        (data["Politician"] == selected_politician) &
-        (data["Transaction"] == "Purchase")
+        (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")
     ]["Invested"].sum()
 
     # Format the result for readability
@@ -134,8 +133,7 @@ def total_sold_politician(data: pd.DataFrame, selected_politician: str) -> str:
 
     # Calculate total sold by the selected politician on sale transactions
     total_sold_politician = help_df[
-        (help_df["Politician"] == selected_politician) &
-        (help_df["Transaction"] == "Sale")
+        (help_df["Politician"] == selected_politician) & (help_df["Transaction"] == "Sale")
     ]["Invested"].sum()
 
     # Format the result for readability

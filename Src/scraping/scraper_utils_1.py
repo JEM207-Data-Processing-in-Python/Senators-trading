@@ -91,12 +91,12 @@ def senators_data_preparation(data: pd.DataFrame,
             .astype(float)
 
         # Change to the datetime format for "Traded" and "Filed"
-        data["Traded"] = pd.to_datetime(data["Traded Date"],
-                                        format="%b %d, %Y").dt.strftime(
-                                        "%Y-%m-%d")
-        data["Filed"] = pd.to_datetime(data["Filed Date"],
-                                       format="%b %d, %Y").dt.strftime(
-                                       "%Y-%m-%d")
+        data["Traded"] = pd.to_datetime(
+            data["Traded Date"], format="%b %d, %Y"
+        ).dt.strftime("%Y-%m-%d")
+        data["Filed"] = pd.to_datetime(
+            data["Filed Date"], format="%b %d, %Y"
+        ).dt.strftime("%Y-%m-%d")
 
         # Calculate the adjusted investment, since sale should decrease your
         # total invested amount
@@ -111,8 +111,7 @@ def senators_data_preparation(data: pd.DataFrame,
         # Drop all with tickers longer than 5 characters and those in
         # exclude_tickers
         exclude_tickers_set = set(exclude_tickers['Ticker'])
-        data = data[(data["Ticker"].str.len() <= 5) &
-                    (~data["Ticker"].isin(exclude_tickers_set))]
+        data = data[(data["Ticker"].str.len() <= 5) & (~data["Ticker"].isin(exclude_tickers_set))]
     except Exception as e:
         logging.error(f"An error occurred: {e}")
         raise

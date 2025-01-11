@@ -125,8 +125,7 @@ def equity_alignment_politician_sector(list_of_politicians, list_of_unique_secto
     strategy_data = data_for_strategy_align_sector(data_general)
     help_df = strategy_data.merge(data_user, how="left", on="sectorKey")
     help_df["alignment"] = (
-        (1 - abs(help_df["Total Invested Sector"] - help_df["Invested by User"]) /
-         help_df["Total Invested Sector"].replace(0, 1)).clip(lower=0)
+        (1 - abs(help_df["Total Invested Sector"] - help_df["Invested by User"]) / help_df["Total Invested Sector"].replace(0, 1)).clip(lower=0)
     )
     tabs = st.tabs(list_of_politicians)
     for i, tab in enumerate(tabs):

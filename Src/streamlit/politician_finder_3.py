@@ -265,12 +265,10 @@ def five_days(data: pd.DataFrame, selected_politician: str) -> pd.DataFrame:
     5 least invested stock trades, sorted by investment amount.
     """
     help_df_purchase = data[
-        (data["Politician"] == selected_politician) &
-        (data["Transaction"] == "Purchase")
+        (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")
     ].copy()
     help_df_sale = data[
-        (data["Politician"] == selected_politician) &
-        (data["Transaction"] == "Sale")
+        (data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")
     ].copy()
 
     top_five = (
@@ -336,9 +334,7 @@ def most_active_purchase(data: pd.DataFrame, selected_politician: str) -> str:
         try:
             # Filter data for the most active purchase
             help_df1 = data[
-                (data["Politician"] == selected_politician) &
-                (data["Traded"] == most_active_purchase) &
-                (data["Transaction"] == "Purchase")].copy()
+                (data["Politician"] == selected_politician) & (data["Traded"] == most_active_purchase) & (data["Transaction"] == "Purchase")].copy()
 
             top_five_purchases = help_df1.groupby(
                 "quoteType", as_index=False
@@ -400,9 +396,7 @@ def most_active_sell(data: pd.DataFrame, selected_politician: str) -> str:
         try:
             # Filter data for the most active sale
             help_df1 = data[
-                (data["Politician"] == selected_politician) &
-                (data["Traded"] == most_active_sell) &
-                (data["Transaction"] == "Sale")
+                (data["Politician"] == selected_politician) & (data["Traded"] == most_active_sell) & (data["Transaction"] == "Sale")
             ].copy()
 
             help_df1["Invested"] = -help_df1["Invested"]
@@ -422,10 +416,7 @@ def most_active_sell(data: pd.DataFrame, selected_politician: str) -> str:
             # Additional sector-specific message for EQUITY
             if "EQUITY" in grouped_df1["quoteType"].unique():
                 help_df2 = data[
-                    (data["Politician"] == selected_politician) &
-                    (data["Traded"] == most_active_sell) &
-                    (data["Transaction"] == "Sale") &
-                    (data["quoteType"] == "EQUITY")
+                    (data["Politician"] == selected_politician) & (data["Traded"] == most_active_sell) & (data["Transaction"] == "Sale") & (data["quoteType"] == "EQUITY")
                 ].copy()
 
                 help_df2["Invested"] = -help_df2["Invested"]

@@ -38,8 +38,7 @@ def best_alignment(data_general: pd.DataFrame, data_user: pd.DataFrame,
     # Calculate alignment score based on the normalized difference, clip to
     # avoid negatives
     help_df["alignment"] = (
-        (1 - abs(help_df["Total Invested"] - help_df["Invested by User"]) /
-         help_df["Total Invested"].replace(0, 1)).clip(lower=0)
+        (1 - abs(help_df["Total Invested"] - help_df["Invested by User"]) / help_df["Total Invested"].replace(0, 1)).clip(lower=0)
     )
 
     # Group by Politician and calculate the average score and alignment

@@ -21,9 +21,7 @@ def top_five_purchased_stocks(data: pd.DataFrame, politician: str,
     :return: pd.DataFrame - A pandas DataFrame with the top 5 purchased stocks,
     including columns for Name, Sector, Total Invested, and Last Purchase date.
     """
-    help_df = data[(data["Politician"] == politician) &
-                   (data["quoteType"] == quoteType) &
-                   (data["Transaction"] == "Purchase")]
+    help_df = data[(data["Politician"] == politician) & (data["quoteType"] == quoteType) & (data["Transaction"] == "Purchase")]
     grouped_df = help_df.groupby("Ticker", as_index=False)["Invested"].sum().round(0)
 
     if quoteType == "EQUITY":
@@ -97,9 +95,7 @@ def top_five_sold_stocks(data: pd.DataFrame, politician: str,
     :return: pd.DataFrame - A pandas DataFrame with the top 5 sold stocks,
     including columns for Name, Sector, Total Sold, and Last Purchase date.
     """
-    help_df = data[(data["Politician"] == politician) &
-                   (data["quoteType"] == quoteType) &
-                   (data["Transaction"] == "Sale")].copy()
+    help_df = data[(data["Politician"] == politician) & (data["quoteType"] == quoteType) & (data["Transaction"] == "Sale")].copy()
     help_df.loc[:, "Invested"] = -help_df["Invested"]
 
     if quoteType == "EQUITY":
@@ -218,8 +214,7 @@ def data_for_strategy_align_sector(data: pd.DataFrame) -> pd.DataFrame:
     total_purchase_equity_df = total_purchase_type_df[
         total_purchase_type_df["quoteType"] == "EQUITY"]
     total_purchase_sector_df = (
-        data[(data["Transaction"] == "Purchase") &
-             (data["quoteType"] == "EQUITY")]
+        data[(data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")]
         .groupby(["Politician", "sectorKey"], as_index=False)["Invested"]
         .sum()
         .rename(columns={"Invested": "Total Invested Sector"})

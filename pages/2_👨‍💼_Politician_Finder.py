@@ -235,8 +235,7 @@ with tab_purchase:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[(data["Politician"] == selected_politician) &
-                     (data["Transaction"] == "Purchase")].quoteType.unique()
+                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()
@@ -259,8 +258,7 @@ with tab_sale:
         list_of_types_of_instruments = list(
             map(
                 str,
-                data[(data["Politician"] == selected_politician) &
-                     (data["Transaction"] == "Sale")].quoteType.unique()
+                data[(data["Politician"] == selected_politician) & (data["Transaction"] == "Sale")].quoteType.unique()
             )
         )
         list_of_types_of_instruments.sort()

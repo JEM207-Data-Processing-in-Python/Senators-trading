@@ -23,8 +23,7 @@ def most_trade_type_politician(data: pd.DataFrame, selected_politician: str) -> 
     """
     try:
         most_trade_type_politician = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Purchase")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")
         ]
             .groupby("quoteType", as_index=False)["Invested"]
             .sum()
@@ -62,8 +61,7 @@ def most_traded_volume_politician(data: pd.DataFrame, selected_politician: str) 
     """
     try:
         most_traded_volume_politician = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Purchase")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase")
         ]
             .groupby("quoteType", as_index=False)["Invested"]
             .sum()
@@ -101,9 +99,7 @@ def most_traded_sector_politician(data: pd.DataFrame, selected_politician: str) 
     """
     try:
         most_traded_sector_politician = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Purchase") &
-            (data["quoteType"] == "EQUITY")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")
         ]
             .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
@@ -115,9 +111,7 @@ def most_traded_sector_politician(data: pd.DataFrame, selected_politician: str) 
 
     try:
         most_traded_sector_volume = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Purchase") &
-            (data["quoteType"] == "EQUITY")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")
         ]
             .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
@@ -160,9 +154,7 @@ def most_sold_sector_politician(data: pd.DataFrame, selected_politician: str) ->
     """
     try:
         most_sold_sector_politician = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Sale") &
-            (data["quoteType"] == "EQUITY")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Sale") & (data["quoteType"] == "EQUITY")
         ]
             .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
@@ -174,9 +166,7 @@ def most_sold_sector_politician(data: pd.DataFrame, selected_politician: str) ->
 
     try:
         most_sold_sector_volume = (data[
-            (data["Politician"] == selected_politician) &
-            (data["Transaction"] == "Sale") &
-            (data["quoteType"] == "EQUITY")
+            (data["Politician"] == selected_politician) & (data["Transaction"] == "Sale") & (data["quoteType"] == "EQUITY")
         ]
             .groupby("sectorKey", as_index=False)["Invested"]
             .sum()

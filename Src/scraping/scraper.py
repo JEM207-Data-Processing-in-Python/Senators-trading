@@ -247,13 +247,11 @@ class Financial_Instruments_Updater:
         if results:
             valid_results, excluded_ticker_results = zip(*results)
             valid_results = [
-                result for result in valid_results if result is not None and
-                not result.empty
+                result for result in valid_results if result is not None and not result.empty
             ]
             progress_bar.progress(100)
             excluded_ticker_dfs = [
-                ex for ex in excluded_ticker_results if ex is not None and
-                not ex.empty
+                ex for ex in excluded_ticker_results if ex is not None and not ex.empty
             ]
             if excluded_ticker_dfs:
                 new_excluded_tickers = pd.concat(
