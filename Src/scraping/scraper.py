@@ -273,6 +273,7 @@ class Financial_Instruments_Updater:
             logging.error(f"Unexpected error for {ticker}: {e}")
             return None
 
+
 class Senators_Information_Updater:
     def __init__(self):
         self.data_loader = DataLoader()
@@ -314,9 +315,9 @@ class Senators_Information_Updater:
                 "Picture": picture
             }])
 
-        except wikipedia.exceptions.DisambiguationError as e:
+        except wikipedia.exceptions.DisambiguationError:
             print(f"Non-process critical error for {politician}")
-        except wikipedia.exceptions.PageError as e:
+        except wikipedia.exceptions.PageError:
             print(f"Page not found for {politician}")
         except Exception as e:
             print(f"Unexpected error for {politician}: {e}")

@@ -7,10 +7,13 @@ from Src.visualization.graphs_utils import get_the_color, same_color_across_pie_
 from Src.streamlit.page_1_data_gather import five_days
 
 
-# TODO error handling, tests, class
-def pie_chart_party_invested(data):
+def pie_chart_party_invested(data: pd.DataFrame) -> go.Figure:
     """
     Create a pie chart showing the total investment by each party.
+
+    :param data: pd.DataFrame - A pandas DataFrame containing trading data with columns such as "Party", "Transaction", "Invested", etc.
+    
+    :return: go.Figure - A Plotly figure containing a pie chart visualizing the total investment by each party.
     """
     help_df = data[data["Transaction"] == "Purchase"].groupby("Party")["Invested"].sum().reset_index()
 
@@ -29,10 +32,13 @@ def pie_chart_party_invested(data):
     return fig
 
 
-# TODO error handling, tests, class
-def pie_chart_party(data):
+def pie_chart_party(data: pd.DataFrame) -> go.Figure:
     """
-    Create a pie chart showing the number of politicians in each chamber.
+    Create a pie chart showing the number of politicians in each party.
+
+    :param data: pd.DataFrame - A pandas DataFrame containing columns such as "Party", "Politician", etc.
+    
+    :return: go.Figure - A Plotly figure containing a pie chart visualizing the number of politicians by party.
     """
     help_df = data.groupby("Party")["Politician"].nunique().reset_index()
 
@@ -51,10 +57,15 @@ def pie_chart_party(data):
     return fig
 
 
-# TODO error handling, tests, class
-def grouping_for_graph(grouping_parametrs, politician, data):
+def grouping_for_graph(grouping_parametrs: str, politician: str, data: pd.DataFrame) -> go.Figure:
     """
     Allows to group the data by the specified parameters and create a line graph showing the cumulative investment over time for a specific politician or party.
+
+    :param grouping_parametrs: str - The parameter to group by (e.g., "Politician" or "Party").
+    :param politician: str - The name of the politician for whom the graph should be created.
+    :param data: pd.DataFrame - The trading data to be processed.
+    
+    :return: go.Figure - A Plotly figure containing a line graph showing the cumulative investment over time.
     """
     data_trading_in_time = data[[grouping_parametrs, "Traded", "Invested"]]
 
@@ -104,16 +115,18 @@ def grouping_for_graph(grouping_parametrs, politician, data):
     return fig
 
 
-# TODO error handling, tests, class
-def grouping_for_barchart(grouping_parametrs, politician, data):
+def grouping_for_barchart(grouping_parametrs: str, politician: str, data: pd.DataFrame) -> go.Figure:
     """
-    Allows to group the data by the specified parameters and create a bar chart showing the total investment
-    over months for a specific politician or party.
+    Allows to group the data by the specified parameters and create a bar chart showing the total investment over months for a specific politician or party.
+
+    :param grouping_parametrs: str - The parameter to group by (e.g., "Politician" or "Party").
+    :param politician: str - The name of the politician for whom the bar chart should be created.
+    :param data: pd.DataFrame - The trading data to be processed.
+    
+    :return: go.Figure - A Plotly figure containing a bar chart showing the total investment over months.
     """
     # Extract relevant columns
-    data_trading_in_time = data[[
-        grouping_parametrs, "Traded", "Invested", "Transaction"
-    ]]
+    data_trading_in_time = data[[grouping_parametrs, "Traded", "Invested", "Transaction"]]
 
     # Ensure that the "Traded" column is in datetime format
     data_trading_in_time["Traded"] = pd.to_datetime(data_trading_in_time["Traded"])
@@ -122,8 +135,7 @@ def grouping_for_barchart(grouping_parametrs, politician, data):
     data_trading_in_time["Month"] = data_trading_in_time["Traded"].dt.strftime('%Y-%m')
 
     # Group by the specified parameter (politician or party) and by Month, summing the Invested amounts
-    monthly_investment = data_trading_in_time.groupby(
-        [grouping_parametrs, "Month"])["Invested"].sum().reset_index()
+    monthly_investment = data_trading_in_time.groupby([grouping_parametrs, "Month"])["Invested"].sum().reset_index()
 
     # Filter the data based on the politician or party
     help_df = monthly_investment[monthly_investment[grouping_parametrs] == politician]
@@ -159,10 +171,14 @@ def grouping_for_barchart(grouping_parametrs, politician, data):
     return fig
 
 
-# TODO error handling, tests, class
-def pie_chart(data, politician):
+def pie_chart(data: pd.DataFrame, politician: str) -> go.Figure:
     """
     Create a pie chart showing the average investment of a specific politician by the specified parameter.
+
+    :param data: pd.DataFrame - The trading data to be processed.
+    :param politician: str - The name of the politician for whom the pie chart should be created.
+    
+    :return: go.Figure - A Plotly figure containing a pie chart showing the average investment.
     """
     help_df = data[data["Politician"] == politician]
     labels = help_df.iloc[:, 1]
@@ -182,10 +198,19 @@ def pie_chart(data, politician):
     return fig
 
 
-# TODO error handling, tests, class
-def pie_chart_advanced(data, purchase, subset, politician):
+def pie_chart_advanced(data: pd.DataFrame, purchase: str, subset: str, politician: str) -> go.Figure:
     """
-    Create an advanced pie chart showing the average investment of a specific politician by the specified parameter and purchase type.
+    Create an advanced pie chart showing the total investment of a specific politician by a subset (such as sectors/instruments) 
+    for a specific purchase type (e.g., 'Purchase' or 'Sale').
+
+    Parameters:
+    - data (pd.DataFrame): The input DataFrame containing transaction data with columns like 'Transaction', 'Politician', 'Invested', etc.
+    - purchase (str): The purchase type ('Purchase' or 'Sale').
+    - subset (str): The parameter to group the data by (e.g., 'Sector', 'Instrument').
+    - politician (str): The politician whose data is to be plotted.
+
+    Returns:
+    - go.Figure: A Plotly figure object containing the pie chart.
     """
     selected_dataset = data[data["Transaction"] == purchase].groupby(
         ["Politician", subset])["Invested"].sum().reset_index()
@@ -208,13 +233,23 @@ def pie_chart_advanced(data, purchase, subset, politician):
         template="plotly_white"
     )
 
-    # Show the plot
     return fig
 
 
-def pie_chart_politician_page_five(data, purchase, subset, politician, list_of_sectors_instruments):
+def pie_chart_politician_page_five(data: pd.DataFrame, purchase: str, subset: str, politician: str, list_of_sectors_instruments: list) -> go.Figure:
     """
-    Create an advanced pie chart showing the average investment of a specific politician by the specified parameter and purchase type.
+    Create an advanced pie chart showing the investment distribution of a specific politician 
+    by the specified parameter (subset) and purchase type (purchase or sale), with consistent color mapping for sectors/instruments.
+
+    Parameters:
+    - data (pd.DataFrame): The input DataFrame containing transaction data.
+    - purchase (str): The purchase type ('Purchase' or 'Sale').
+    - subset (str): The parameter to group the data by (e.g., 'Sector', 'Instrument').
+    - politician (str): The politician whose investment data is to be visualized.
+    - list_of_sectors_instruments (list): A list of sectors or instruments to map consistent colors.
+
+    Returns:
+    - go.Figure: A Plotly figure object containing the pie chart.
     """
     # Get consistent colors for the list_of_sectors_instruments
     colors = same_color_across_pie_charts(list_of_sectors_instruments)
@@ -225,7 +260,7 @@ def pie_chart_politician_page_five(data, purchase, subset, politician, list_of_s
     help_df = selected_dataset[selected_dataset["Politician"] == politician]
 
     # Prepare data for the pie chart
-    labels = help_df.iloc[:, 1]  # Subset column
+    labels = help_df.iloc[:, 1]
     if purchase == "Purchase":
         values = help_df['Invested']
     else:
@@ -251,13 +286,20 @@ def pie_chart_politician_page_five(data, purchase, subset, politician, list_of_s
         template="plotly_white"
     )
 
-    # Return the plot
     return fig
 
 
-def pie_chart_user_page_five(data, list_of_sectors_instruments, what):
+def pie_chart_user_page_five(data: pd.DataFrame, list_of_sectors_instruments: list, what: str) -> go.Figure:
     """
-    Create a pie chart showing the average investment of a user by list_of_sectors_instruments with consistent colors.
+    Create a pie chart showing the average investment of a user by sectors/instruments with consistent colors.
+
+    Parameters:
+    - data (pd.DataFrame): The input DataFrame containing user investment data.
+    - list_of_sectors_instruments (list): A list of sectors or instruments to map consistent colors.
+    - what (str): The column name in the DataFrame to use as the labels for the pie chart (e.g., 'Sector').
+
+    Returns:
+    - go.Figure: A Plotly figure object containing the pie chart.
     """
     # Dynamically create consistent color mapping
     colors = same_color_across_pie_charts(list_of_sectors_instruments)
@@ -286,11 +328,20 @@ def pie_chart_user_page_five(data, list_of_sectors_instruments, what):
         template="plotly_white"
     )
 
-    # Return the plot
     return fig
 
 
-def five_days_graph(data, selected_politician):
+def five_days_graph(data: pd.DataFrame, selected_politician: str) -> go.Figure:
+    """
+    Create a bar graph showing the trading volume over the top 5 days for a specific politician.
+    
+    Parameters:
+    - data (pd.DataFrame): The input DataFrame containing the data for the politician's transactions.
+    - selected_politician (str): The politician whose trading volume is to be visualized.
+
+    Returns:
+    - go.Figure: A Plotly figure object containing the bar chart.
+    """
     help_df = five_days(data, selected_politician)
 
     help_df_sorted = help_df.sort_values(by="Invested", ascending=False)
@@ -300,7 +351,6 @@ def five_days_graph(data, selected_politician):
     # Create the Plotly bar chart
     fig = go.Figure()
 
-    # Add bar trace for the investment per month
     fig.add_trace(go.Bar(
         x=help_df_sorted["Traded"],
         y=help_df_sorted["Invested"],

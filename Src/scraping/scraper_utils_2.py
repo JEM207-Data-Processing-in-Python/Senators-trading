@@ -1,7 +1,6 @@
 """
 This module contains the help functions for scraper.py module
 """
-
 import pandas as pd
 import logging
 
@@ -66,6 +65,7 @@ def fin_ticker_preparation(data: pd.DataFrame, exclude_tickers: pd.DataFrame) ->
         raise
 
     return data
+
 
 def is_data_up_to_date(current_data: pd.DataFrame, ticker: str) -> bool:
     """

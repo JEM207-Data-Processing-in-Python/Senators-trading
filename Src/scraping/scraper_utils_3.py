@@ -5,6 +5,7 @@ import pandas as pd
 import logging
 from typing import List, Optional
 
+
 def add_to_exclude_tickers(ticker: str, exclude_tickers: pd.DataFrame) -> pd.DataFrame:
     """
     Add a ticker to the exclude list if it's not already present.
@@ -28,7 +29,7 @@ def add_to_exclude_tickers(ticker: str, exclude_tickers: pd.DataFrame) -> pd.Dat
 def get_profile_picture(images: List[str]) -> Optional[str]:
     """
     Filters out irrelevant images and returns the first valid profile picture from a list of image URLs.
-    
+
     Args:
         images (List[str]): A list of image URLs (strings).
 

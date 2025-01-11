@@ -5,6 +5,7 @@ This file contains the helper code for the Streamlit app's Home page.
 from Src.scraping.scraper import DataLoader
 import pandas as pd
 
+
 def general_information() -> tuple:
     """
     This function loads senator's trading data and returns key statistics:
