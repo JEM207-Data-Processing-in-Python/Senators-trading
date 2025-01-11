@@ -36,13 +36,12 @@ You should see `(.venv)` in the terminal prompt.
 ```sh
 cd <repository>
 pip install -r requirements.txt  # Install dependencies for project
-pip install -r requirements_dev.txt  # Install dependencies for testing
 ```
 
 If you would also like to run the tests for the project, install development dependencies.
 
 ```sh
-pip install -r requirements_dev.txt  # Install dependencies for testing
+pip install -r requirements_test.txt  # Install dependencies for testing
 ```
 
 ### 4. Run the project
@@ -89,10 +88,16 @@ Before committing the code, make sure it is well-described and formatted. A help
 
 When creating a function, it is good to develop tests to ensure it does not break old ones when adding new things. We will use **pytest**. More info [Testing in Python](https://naucse.python.cz/lessons/intro/testing/)
 
+Branches **main** and **publish** have implemented automatic tests on *push* with pytest, flake8 and mypy in github.
+
 ### Streamlit
 
 The visualization app we will create in **Streamlit** and **Plotly** More info and ispiration [Streamlit](https://streamlit.io/gallery) and [Plotly](https://plotly.com/python/)
 
 ### Requirements
 
-When adding a new package, please include it in the requirements and use `pip freeze > requirements.txt`. For testing package use with testing include it in `requirements_dev.txt`
+When adding a new package, please include it in the requirements and use `pip freeze > requirements.txt`. For testing package use with testing include it in `requirements_test.txt`
+
+### Further improvements
+
+SQLite database

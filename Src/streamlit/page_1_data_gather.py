@@ -120,10 +120,10 @@ def most_traded_sector_politician(data, selected_politician):
         most_traded_sector_politician = (data[
             (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")
         ]
-            .groupby("sector", as_index=False)["Invested"]
+            .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
             .sort_values(by="Invested", ascending=False)
-            .iloc[0]["sector"]
+            .iloc[0]["sectorKey"]
         )
     except Exception:
         most_traded_sector_politician = "Empty"
@@ -132,7 +132,7 @@ def most_traded_sector_politician(data, selected_politician):
         most_traded_sector_volume = (data[
             (data["Politician"] == selected_politician) & (data["Transaction"] == "Purchase") & (data["quoteType"] == "EQUITY")
         ]
-            .groupby("sector", as_index=False)["Invested"]
+            .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
             .sort_values(by="Invested", ascending=False)
             .iloc[0]["Invested"]
@@ -159,10 +159,10 @@ def most_sold_sector_politician(data, selected_politician):
         most_sold_sector_politician = (data[
             (data["Politician"] == selected_politician) & (data["Transaction"] == "Sale") & (data["quoteType"] == "EQUITY")
         ]
-            .groupby("sector", as_index=False)["Invested"]
+            .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
             .sort_values(by="Invested", ascending=False)
-            .iloc[-1]["sector"]
+            .iloc[-1]["sectorKey"]
         )
     except Exception:
         most_sold_sector_politician = "Empty"
@@ -171,7 +171,7 @@ def most_sold_sector_politician(data, selected_politician):
         most_sold_sector_volume = (data[
             (data["Politician"] == selected_politician) & (data["Transaction"] == "Sale") & (data["quoteType"] == "EQUITY")
         ]
-            .groupby("sector", as_index=False)["Invested"]
+            .groupby("sectorKey", as_index=False)["Invested"]
             .sum()
             .sort_values(by="Invested", ascending=False)
             .iloc[-1]["Invested"]

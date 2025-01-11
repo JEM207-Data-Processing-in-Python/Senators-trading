@@ -3,12 +3,11 @@ import streamlit as st
 import pandas as pd
 from Src.visualization.tables import data_for_strategy_align_type, data_for_strategy_align_sector
 from Src.scraping.scraper import DataLoader
-from Src.streamlit.page_5_functions import best_alignment_sector, equity_alignment_politician_sector, best_alignment_instrument, equity_alignment_politician_instrument
+from Src.streamlit.align_your_investment_strategy import best_alignment_sector, equity_alignment_politician_sector, best_alignment_instrument, equity_alignment_politician_instrument
 
 # Original data
 data_senators = DataLoader().load_senators_trading()
 data_instruments = DataLoader().load_financial_instruments()
-
 
 # Set the page configuration
 st.set_page_config(
@@ -17,18 +16,30 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto",
     menu_items={
-        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations.\n\n *Made by Dario Mikuš and Michal Smieško*"
+        'About': "### US politicians Trading visualization\n An interactive web application visualizing U.S. Senators' financial trading activities, analyzing potential insider trading, and offering portfolio-based recommendations."
     }
 )
 
-data_instruments = data_instruments[["Ticker", "quoteType", "currency",
-                                     "longName", "shortName", "industry", "sector", "city",
-                                     "country", "industryKey", "industryDisp", "sectorKey",
-                                     "sectorDisp", "longBusinessSummary", "financialCurrency"]]
+columns_to_keep = [
+    "Ticker",
+    "city",
+    "country",
+    "industryKey",
+    "sectorKey",
+    "longBusinessSummary",
+    "currency",
+    "quoteType",
+    "shortName",
+    "longName",
+    "financialCurrency"
+]
+
+# Filter the DataFrame
+data_instruments = data_instruments[columns_to_keep]
 
 data = data_senators.merge(data_instruments, how="left", on="Ticker")
 data = data.fillna("Unknown")
-data_sector = data[data["sector"] != "Unknown"]
+data_sector = data[data["sectorKey"] != "Unknown"]
 data_instruments = data[data["quoteType"] != "Unknown"]
 
 strategy_type = data_for_strategy_align_type(data_instruments)
@@ -37,7 +48,7 @@ strategy_sector = data_for_strategy_align_sector(data_sector)
 
 # Filter and get the list of unique sectors
 list_of_unique_sectors = (
-    strategy_sector[strategy_sector["sector"] != "Unknown"]["sector"]
+    strategy_sector[strategy_sector["sectorKey"] != "Unknown"]["sectorKey"]
     .dropna()
     .unique()
 )

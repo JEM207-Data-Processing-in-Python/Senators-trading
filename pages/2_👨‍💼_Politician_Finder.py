@@ -13,10 +13,9 @@ from Src.streamlit.page_1_data_gather import most_active_purchase, most_active_s
 data_senators = DataLoader().load_senators_trading()
 data_instruments = DataLoader().load_financial_instruments()
 
-data_instruments = data_instruments[["Ticker", "quoteType", "currency",
-                                     "longName", "shortName", "industry", "sector", "city",
-                                     "country", "industryKey", "industryDisp", "sectorKey",
-                                     "sectorDisp", "longBusinessSummary", "financialCurrency"]]
+data_instruments = data_instruments[["Ticker", "quoteType", "longName", "shortName",
+                                     "city", "country", "industryKey", "sectorKey",
+                                     "longBusinessSummary", "financialCurrency", "currency"]]
 
 data = data_senators.merge(data_instruments, how="left", on="Ticker")
 data = data.fillna("Unknown")
@@ -126,7 +125,7 @@ with tabs[0]:  # Purchase tab
 
         with col2:
             try:
-                chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sector", selected_politician)
+                chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sectorKey", selected_politician)
                 st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")
@@ -146,7 +145,7 @@ with tabs[1]:  # Sale tab
 
         with col2:
             try:
-                chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sector", selected_politician)
+                chart_pie_chart_exposure_2 = pie_chart_advanced(data, purchase, "sectorKey", selected_politician)
                 st.plotly_chart(chart_pie_chart_exposure_2, use_container_width=True)
             except Exception as e:
                 st.error(f"Error generating chart: {e}")

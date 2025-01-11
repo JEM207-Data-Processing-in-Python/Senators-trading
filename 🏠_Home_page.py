@@ -28,7 +28,7 @@ with col2:
 st.title("U.S. Senator's Trading Visualization")
 
 # General Information
-unique_politicians, unique_tickers, sum_invested, first_trans = general_information()
+unique_politicians, unique_tickers, sum_invested, first_trans, last_update = general_information()
 
 # About the project
 st.subheader("About the project")
@@ -36,7 +36,7 @@ st.write(
     f"""
     This project aims to visualize U.S. senator's financial trading activities based on their financial disclosures. The financial disclosure reports provide greater legitimacy for the general public regarding senator's investment activities, ensuring that politicians do not create or favor laws that could benefit their own investments.
 
-    It features interactive charts of over **{unique_politicians}** to explore popular investment sectors, trends of over **{unique_tickers}** financial isntruments and profit standings among senators which invested total of **{sum_invested:,.0f} $** since year **{first_trans}**. It also places senators' trading activities in the context of the market and the general public. The sub-parts of the project feature:
+    It features interactive charts of over **{unique_politicians}** politicians to explore popular investment sectors, trends of over **{unique_tickers}** financial isntruments and profit standings among senators which invested total of **{sum_invested:,.0f} $** since year **{first_trans}**. It also places senators' trading activities in the context of the market and the general public. The sub-parts of the project feature:
 
     - **[Politician Finder](Politician_Finder)**: Provides detailed information about individual politicians. It shows general information about the politician, their trading activity, exposure to the market, and many other interesting insights.
 
@@ -51,7 +51,7 @@ st.write(
 # Data
 st.subheader("Data Sources")
 st.write(
-    """
+    f"""
     This project draws from multiple credible sources to ensure accurate and comprehensive insights into U.S. senator's trading activities and financial data. Below is a detailed overview of the data sources that power this application:
 
     - **[TrendSpider](https://trendspider.com/markets/congress-trading)**: One of the main sources for our project is TrendSpider, where we scrape detailed tables containing the most recent trading activities of U.S. senators. These tables are updated daily to reflect disclosures filed by the senators themselves. The data provides critical insights into which financial instruments are being traded, the transaction types, and the overall trends among different senators and political affiliations.
@@ -60,7 +60,7 @@ st.write(
 
     - **[Wikipedia](https://en.wikipedia.org/)**: To provide background context, we leverage the Wikipedia API to gather general information about U.S. senators. This includes their profiles, political affiliations, and other biographical details, which help enrich the dataset and provide a more holistic understanding of the individuals behind the trades. This data is particularly useful in identifying patterns related to party lines, voting behavior, and trading habits.
 
-    The datasets are not updated automatically, so we provide the option for users to update the data using the buttons below.
+    The datasets are not updated automatically, so we provide the option for users to update the data using the buttons below. Last update was on **{last_update}**. Updating can take a few minutes depending of last update date.
     """
 )
 
@@ -68,6 +68,7 @@ st.write(
 st.subheader("Update Data")
 sen_trading, fin_instrument, sen_information = False, False, False
 
+# Columns for buttons
 col1, col2, col3 = st.columns(3)
 with col1:
     if st.button('Update Senators Trading Activity Data'):

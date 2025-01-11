@@ -1,9 +1,0 @@
-flake8
-mypy
-pytest
-setuptools
-wheel
-pytest-cov
-pytest-xdist
-pytest-mock
-requests-mock
