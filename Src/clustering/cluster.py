@@ -3,11 +3,12 @@ This module contains the functions to cluster the data and recommend the best al
 """
 import pandas as pd
 
+
 def best_alignment(data_general: pd.DataFrame, data_user: pd.DataFrame, join: str) -> pd.DataFrame:
     """
-    This function calculates the alignment between general data (e.g., Total Invested Type) 
-    and user-provided data (e.g., Invested by User) based on a common column. 
-    It computes a Mean Squared Error (MSE) score and alignment percentage for each politician, 
+    This function calculates the alignment between general data (e.g., Total Invested Type)
+    and user-provided data (e.g., Invested by User) based on a common column.
+    It computes a Mean Squared Error (MSE) score and alignment percentage for each politician,
     ranks the top 5 politicians based on the best alignment, and returns the resulting DataFrame.
 
     Args:

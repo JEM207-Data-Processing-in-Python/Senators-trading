@@ -82,8 +82,8 @@ def top_five_sold_stocks(data: pd.DataFrame, politician: str, quoteType: str) ->
 
     :return: pd.DataFrame - A pandas DataFrame with the top 5 sold stocks, including columns for Name, Sector, Total Sold, and Last Purchase date.
     """
-    help_df = data[(data["Politician"] == politician) & (data["quoteType"] == quoteType) & (data["Transaction"] == "Sale")]
-    help_df["Invested"] = -help_df["Invested"]
+    help_df = data[(data["Politician"] == politician) & (data["quoteType"] == quoteType) & (data["Transaction"] == "Sale")].copy()
+    help_df.loc[:, "Invested"] = -help_df["Invested"]
 
     if quoteType == "EQUITY":
         grouped_df = help_df.groupby("Ticker", as_index=False)["Invested"].sum().round(0)

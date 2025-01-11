@@ -86,7 +86,7 @@ tab1, tab2 = st.tabs(["**Instruments alignment**", "**Equity strategy**"])
 with tab1:
     st.markdown(f"""
                 Politicians in our data invest in the following instruments: **{',  '.join(list_of_unique_instruments)}**.
-                
+
                 Now, you can enter your desirable exposure to the individual instruments based on your portfolio or preferencies.
                 The total exposure must sum to 100 % and if you are done press **Submit**.
                 """)
@@ -105,7 +105,7 @@ with tab1:
     col1, col2 = st.columns([6, 1])
     with col1:
         st.markdown(f"You assign: {sum(inputs_instrument.values())} / 100")
-    
+
     with col2:
         disable_submit_button = sum(inputs_instrument.values()) != 100
         submit_button = st.button("SUBMIT", key="Submit_instrument", disabled=disable_submit_button)
@@ -128,7 +128,7 @@ with tab1:
                  """)
         st.table(top_5_instrument_strategy)
         st.write("here you can browser the politicians to see the detailed analysis:")
-        
+
         unique_5_politicians = top_5_instrument_strategy["Politician"].unique().tolist()
         equity_alignment_politician_instrument(unique_5_politicians, list_of_unique_instruments, data_instruments, strategy_inserted_instrument)
 
@@ -138,10 +138,10 @@ with tab1:
 with tab2:
     st.markdown(f"""
                 Politicians in our data invest in the following sectors: **{',  '.join(list_of_unique_sectors)}**.
-                
+
                 Now, you can enter your desirable exposure to the individual sectors based on your portfolio or preferences. The total exposure must sum to 100 % and if you are done press **Submit**.
                 """)
-    
+
     for sector_chunk in chunk_list(list_of_unique_sectors, 6):
         cols = st.columns(len(sector_chunk))
 
@@ -156,7 +156,7 @@ with tab2:
     col1, col2 = st.columns([6, 1])
     with col1:
         st.markdown(f"You assign: {sum(inputs.values())} / 100")
-    
+
     with col2:
         disable_submit_button = sum(inputs.values()) != 100
         submit_button = st.button("SUBMIT", key="Submit_sector", disabled=disable_submit_button)
