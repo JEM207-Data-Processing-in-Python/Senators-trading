@@ -31,8 +31,8 @@ def general_information() -> tuple:
         first_transaction = "unknown"
         last_update = "unknown"
     else:
-        unique_politicians = len(data_senators['Politician'].unique())
-        unique_tickers = len(data_senators['Ticker'].unique())
+        unique_politicians: int = len(data_senators['Politician'].unique())
+        unique_tickers: int = len(data_senators['Ticker'].unique())
         sum_invested = data_senators[
             data_senators['Transaction'] == 'Purchase']['Invested'].sum()
         first_transaction = data_senators['Traded'].astype(
