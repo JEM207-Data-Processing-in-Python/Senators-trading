@@ -4,7 +4,7 @@ This file contains the tests for the politician_finder_3.py file.
 import pytest
 import pandas as pd
 from unittest.mock import MagicMock, patch
-from Src.streamlit.politician_finder_3 import wikipedia_information, chamber_politician, individual_invest_politician
+from Src.streamlit.politician_finder_3 import wikipedia_information, chamber_politician, individual_invest_politician, most_active_sell, most_active_purchase
 
 
 @patch("Src.scraping.scraper.DataLoader")
@@ -65,3 +65,69 @@ def test_individual_invest_politician(mock_top_five):
     # Test function
     result = individual_invest_politician(data, quote_types, selected_politician)
     assert result == expected_message
+
+
+@pytest.fixture
+def mock_data():
+    return pd.DataFrame({
+        'Politician': ['Politician A', 'Politician A', 'Politician B', 'Politician A'],
+        'Transaction': ['Sale', 'Sale', 'Sale', 'Sale'],
+        'Traded': ['Stock1', 'Stock2', 'Stock1', 'Stock1'],
+        'Invested': [-500, -200, -300, -1000],
+        'quoteType': ['EQUITY', 'BOND', 'EQUITY', 'EQUITY'],
+        'sector': ['Tech', 'Finance', 'Tech', 'Energy']
+    })
+
+
+def test_no_sales(mock_data):
+    # Test function
+    result = most_active_sell(mock_data, 'Politician C')
+    assert result == "Politician C has not sold any instruments during the documented period."
+
+
+def test_most_active_sale(mock_data):
+    # Test function
+    result = most_active_sell(mock_data, 'Politician A')
+    assert "Politician A sold the most on Stock1" in result
+    assert "with a total volume sold of 1,500 USD." in result
+
+
+def create_sample_data():
+    return pd.DataFrame({
+        'Politician': ['Politician A', 'Politician A', 'Politician B', 'Politician A'],
+        'Transaction': ['Purchase', 'Purchase', 'Purchase', 'Purchase'],
+        'Traded': ['2025-01-01', '2025-01-02', '2025-01-01', '2025-01-03'],
+        'Invested': [10000, 5000, 15000, 20000],
+        'quoteType': ['Stock A', 'Stock B', 'Stock A', 'Stock C']
+    })
+
+
+def test_most_active_purchase_with_data():
+    data = create_sample_data()
+
+    # Test function
+    result = most_active_purchase(data, 'Politician A')
+    assert 'Politician A' in result
+    assert 'invested the most on day' in result
+    assert 'The most purchased stock type is' in result
+
+
+def test_most_active_purchase_no_data():
+    # Test function
+    data = create_sample_data()
+    result = most_active_purchase(data, 'Politician C')
+    assert 'has not purchased any instruments' in result
+
+
+def test_most_active_purchase_tie():
+    data = pd.DataFrame({
+        'Politician': ['Politician A', 'Politician A', 'Politician A'],
+        'Transaction': ['Purchase', 'Purchase', 'Purchase'],
+        'Traded': ['2025-01-01', '2025-01-02', '2025-01-03'],
+        'Invested': [10000, 10000, 5000],
+        'quoteType': ['Stock A', 'Stock B', 'Stock A']
+    })
+
+    # Test function
+    result = most_active_purchase(data, 'Politician A')
+    assert 'invested the most on day' in result

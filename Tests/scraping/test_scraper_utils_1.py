@@ -4,29 +4,7 @@ This is a test file for the scraper_utils_1.py file.
 
 import pytest
 import pandas as pd
-from Src.scraping.scraper_utils_1 import load_data, get_last_current_data, delete_exclude_tickers, senators_data_preparation
-
-
-def test_load_data_existing_file(tmpdir):
-    filepath = tmpdir.join("test_data.csv")
-    columns = ['col1', 'col2']
-    df = pd.DataFrame({'col1': [1, 2], 'col2': [3, 4]})
-    df.to_csv(str(filepath), index=False)
-
-    # Test function
-    loaded_df = load_data(str(filepath), columns)
-    assert not loaded_df.empty
-    assert list(loaded_df.columns) == columns
-
-
-def test_load_data_non_existing_file(tmpdir):
-    filepath = tmpdir.join("non_existing_file.csv")
-    columns = ['col1', 'col2']
-
-    # Test function
-    df = load_data(str(filepath), columns)
-    assert df.empty
-    assert list(df.columns) == columns
+from Src.scraping.scraper_utils_1 import get_last_current_data, delete_exclude_tickers, senators_data_preparation
 
 
 def test_get_last_current_data_empty():

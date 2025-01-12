@@ -132,7 +132,7 @@ class Senators_Trading_Updater:
                         )
                         time.sleep(2)
                         status_text.text(
-                            "All {len(new_data)} new records from the internet "
+                            f"All {len(new_data)} new records from the internet "
                             "loaded successfully and saved to senators_trading.csv"
                         )
                         current_data.to_csv(

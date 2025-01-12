@@ -22,7 +22,11 @@ git clone <repository-url>  # Replace `<repository-url>` with the repository URL
 
 *Alternatively, depending on your preference, you can clone this repository securely using SSH, offering a seamless and encrypted connection tailored to your workflow.*
 
-### 2. Set Up a Virtual Environment and activate it
+### 2. Python compatibility
+
+To succesfully run this project, please make sure you have **python3.10** or greater.
+
+### 3. Set Up a Virtual Environment and activate it
 
 ```sh
 python -m venv .venv
@@ -33,7 +37,7 @@ You should see `(.venv)` in the CLI.
 
 *To leave the virtual environment, use the `deactivate` command*
 
-### 3. Install Dependencies
+### 4. Install Dependencies
 
 ```sh
 cd <repository>
@@ -46,7 +50,7 @@ If you would also like to run the tests for the project as pytest and flake8, in
 pip install -r requirements_test.txt  # Install dependencies for testing the project
 ```
 
-### 4. Run the project
+### 5. Run the project
 
 ```sh
 streamlit run 🏠_Home_page.py
@@ -69,12 +73,6 @@ pytest
 ```
 
 ## Details
-
-### Webpage
-
-This project is host on Heroku, avaible at **[https://senator-trading-631394c92cff.herokuapp.com](https://senator-trading-631394c92cff.herokuapp.com)**
-
-*May not be state-of-art version of project*.
 
 ### Data
 
