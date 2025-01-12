@@ -2,7 +2,6 @@
 Scraper functions for obtaining data from the internet - senators trading,
 financial instruments, and senators' information.
 """
-
 import os
 import time
 import logging
@@ -227,6 +226,7 @@ class Financial_Instruments_Updater:
             current_data = pd.DataFrame(columns=['Ticker'])
 
         tickers = senators_data.Ticker.drop_duplicates()
+        tickers = pd.concat([tickers, pd.Series(["^GSPC"])], ignore_index=True)
         tickers = fin_ticker_preparation(tickers, exclude_tickers)
         tickers = [ticker for ticker in tickers if not is_data_up_to_date(
             current_data, ticker
@@ -239,55 +239,55 @@ class Financial_Instruments_Updater:
             "this page..."
         )
 
-        with Pool(processes=2) as pool:
-            results = pool.map(self.process_ticker, [
-                (index, len(tickers), ticker, current_data, exclude_tickers)
-                for index, ticker in enumerate(tickers)
-            ])
-        if results:
-            valid_results, excluded_ticker_results = zip(*results)
-            valid_results = [
-                result for result in valid_results if result is not None and not result.empty
-            ]
-            progress_bar.progress(100)
-            excluded_ticker_dfs = [
-                ex for ex in excluded_ticker_results if ex is not None and not ex.empty
-            ]
-            if excluded_ticker_dfs:
-                new_excluded_tickers = pd.concat(
-                    excluded_ticker_dfs, ignore_index=True
-                )
-                new_excluded_tickers = new_excluded_tickers.drop_duplicates(
-                    subset=['Ticker']
-                )
-                new_excluded_tickers.to_csv(
-                    os.path.join("Data", "exclude_tickers.csv"), index=False
-                )
+        try:
+            with Pool(processes=2) as pool:
+                results = pool.map(self.process_ticker, [
+                    (index, len(tickers), ticker, current_data, exclude_tickers)
+                    for index, ticker in enumerate(tickers)
+                ])
+            if results:
+                valid_results, excluded_ticker_results = zip(*results)
+                valid_results = [
+                    result for result in valid_results if result is not None and not result.empty and is_data_up_to_date(result, result['Ticker'].values[0])
+                ]
+                progress_bar.progress(100)
+                excluded_ticker_dfs = [
+                    ex for ex in excluded_ticker_results if ex is not None and not ex.empty
+                ]
+                if excluded_ticker_dfs:
+                    new_excluded_tickers = pd.concat(
+                        excluded_ticker_dfs, ignore_index=True
+                    )
+                    new_excluded_tickers = new_excluded_tickers.drop_duplicates(
+                        subset=['Ticker']
+                    )
+                    new_excluded_tickers.to_csv(
+                        os.path.join("Data", "exclude_tickers.csv"), index=False
+                    )
 
-            if valid_results:
-                update_data = pd.concat(valid_results, ignore_index=True)
-                current_data = pd.concat(
-                    [current_data, update_data], ignore_index=True, join='outer'
-                )
-                current_data = current_data.drop_duplicates(subset=['Ticker'])
-                current_data = current_data.dropna(
-                    subset=[current_data.columns[-1]]
-                ).reset_index(drop=True)
-                status_text.text(
-                    f"All {len(update_data)} new records from the internet "
-                    "loaded successfully and saved to financial_instruments.csv"
-                )
-                current_data.to_csv(
-                    os.path.join("Data", "financial_instruments.csv"),
-                    index=False
-                )
+                if valid_results:
+                    update_data = pd.concat(valid_results, ignore_index=True)
+                    current_data = pd.concat(
+                        [current_data, update_data], ignore_index=True, join='outer'
+                    )
+                    current_data = current_data.drop_duplicates(subset=['Ticker'])
+                    status_text.text(
+                        f"All {len(update_data)} new records from the internet "
+                        "loaded successfully and saved to financial_instruments.csv"
+                    )
+                    current_data.to_csv(
+                        os.path.join("Data", "financial_instruments.csv"),
+                        index=False
+                    )
+                else:
+                    status_text.text(
+                        f"All {len(valid_results)} new records from the internet "
+                        "loaded successfully and saved to financial_instruments.csv"
+                    )
             else:
-                status_text.text(
-                    f"All {len(valid_results)} new records from the internet "
-                    "loaded successfully and saved to financial_instruments.csv"
-                )
-        else:
-            status_text.text("No new records were found.")
+                status_text.text("No new records were found.")
+        except Exception as e:
+            logging.error(f"An error occurred while updating financial instruments data, plaese repeat: {e}")
 
     def process_ticker(self, args):
         index, tickers, ticker, current_data, exclude_tickers = args

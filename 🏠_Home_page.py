@@ -108,7 +108,7 @@ st.write(
       behavior, and trading habits.
 
     The datasets are not updated automatically, so we provide the option for
-    users to update the data using the buttons below. Last update was on
+    users to update the data using the buttons below. Last data are from
     **{last_update}**. Updating can take a few minutes depending of last update
     date.
     """
