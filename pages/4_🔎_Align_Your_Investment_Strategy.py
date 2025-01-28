@@ -168,7 +168,7 @@ with tab1:
             """
         )
         st.table(top_5_instrument_strategy)
-        st.write("here you can browser the politicians to see the detailed analysis:")
+        st.write("here you can browse the politicians to see the detailed analysis:")
 
         unique_5_politicians = top_5_instrument_strategy["Politician"].unique().tolist()
         equity_alignment_politician_instrument(
@@ -235,7 +235,7 @@ with tab2:
                 """
             )
             st.table(top_5_sector_strategy)
-            st.write("here you can browser the politicians to see the detailed analysis:")
+            st.write("here you can browse the politicians to see the detailed analysis:")
 
             unique_5_politicians = top_5_sector_strategy["Politician"].unique().tolist()
             equity_alignment_politician_sector(

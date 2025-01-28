@@ -29,7 +29,11 @@ def best_alignment(data_general: pd.DataFrame, data_user: pd.DataFrame,
             - Alignment (%) (float): The alignment score as a percentage.
     """
     # Merge data frames on 'type'
-    help_df = data_general.merge(data_user, how="left", on=join)
+    help_df = data_general.merge(data_user, how="right", on = join).fillna(0)
+
+    help_df = help_df.drop(columns= "Total Invested")
+    help_df = help_df.rename(columns = {"Total Invested Sector" : "Total Invested", "Total Invested Type" : "Total Invested"})
+
 
     # Calculate the squared difference as a "score" (penalizing larger
     # differences)
@@ -37,8 +41,11 @@ def best_alignment(data_general: pd.DataFrame, data_user: pd.DataFrame,
 
     # Calculate alignment score based on the normalized difference, clip to
     # avoid negatives
-    help_df["alignment"] = (
-        (1 - abs(help_df["Total Invested"] - help_df["Invested by User"]) / help_df["Total Invested"].replace(0, 1)).clip(lower=0)
+    help_df["alignment"] = help_df.apply(
+    lambda row: 1 if row["Total Invested"] == row["Invested by User"] 
+    else (0 if row["Total Invested"] == 0 or abs(row["Total Invested"] - row["Invested by User"]) / row["Total Invested"] > 1 
+    else 1 - abs(row["Total Invested"] - row["Invested by User"]) / row["Total Invested"]),
+    axis=1
     )
 
     # Group by Politician and calculate the average score and alignment
