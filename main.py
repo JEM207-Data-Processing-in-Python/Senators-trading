@@ -1,7 +1,6 @@
 """
 This file serves as main entry point for the Streamlit app.
 """
-
 import streamlit as st
 
 # Hide the main.py entry in the sidebar
