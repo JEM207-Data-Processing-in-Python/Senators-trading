@@ -3,6 +3,7 @@ This file contains the test functions for the cluster.py module.
 """
 import pytest
 import pandas as pd
+
 from Src.clustering.cluster import best_alignment
 
 

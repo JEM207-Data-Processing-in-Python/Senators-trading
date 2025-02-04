@@ -3,6 +3,7 @@ This file contains the tests for the graphs_align_investment.py file.
 """
 import pandas as pd
 from plotly.graph_objects import Figure
+
 from Src.visualization.graphs_align_investment import Pie_Chart_Align_Investment
 
 sample_data = pd.DataFrame({

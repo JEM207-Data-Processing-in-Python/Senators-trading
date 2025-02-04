@@ -16,16 +16,12 @@ import yfinance as yf
 import streamlit as st
 from bs4 import BeautifulSoup
 
-from Src.scraping.scraper_utils_1 import (
+from Src.scraping.scraper_utils import (
     load_data, get_last_current_data, delete_exclude_tickers,
-    senators_data_preparation
-)
-from Src.scraping.scraper_utils_2 import (
-    fin_history_preparation, fin_info_preparation, fin_ticker_preparation,
-    is_data_up_to_date
-)
-from Src.scraping.scraper_utils_3 import (
-    add_to_exclude_tickers, get_profile_picture
+    senators_data_preparation, fin_history_preparation,
+    fin_info_preparation, fin_ticker_preparation,
+    is_data_up_to_date, add_to_exclude_tickers,
+    get_profile_picture
 )
 
 # Suppress streamlit logs

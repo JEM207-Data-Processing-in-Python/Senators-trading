@@ -4,7 +4,10 @@ This file contains the tests for the tables.py file.
 import pandas as pd
 import pytest
 
-from Src.visualization.tables import top_five_purchased_stocks, top_five_sold_stocks, data_for_strategy_align_type, data_for_strategy_align_sector
+from Src.visualization.tables import (
+    top_five_purchased_stocks, top_five_sold_stocks,
+    data_for_strategy_align_type, data_for_strategy_align_sector
+)
 
 
 @pytest.fixture

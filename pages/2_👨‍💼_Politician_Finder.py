@@ -5,17 +5,12 @@ import streamlit as st
 
 from Src.scraping.scraper import DataLoader
 from Src.visualization.graphs_politician_finder import Politician_Data_Visualizer
-from Src.streamlit.politician_finder_1 import (
+from Src.streamlit.politician_finder import (
     party_politician, first_trade_politician, last_trade_politician,
-    total_invested_politician, total_sold_politician
-)
-from Src.streamlit.politician_finder_2 import (
-    most_trade_type_politician, most_traded_volume_politician,
-    most_traded_sector_politician, most_sold_sector_politician
-)
-from Src.streamlit.politician_finder_3 import (
-    most_active_purchase, most_active_sell, section_three_purchase_table,
-    chamber_politician, wikipedia_information
+    total_invested_politician, total_sold_politician, most_trade_type_politician,
+    most_traded_volume_politician, most_traded_sector_politician,
+    most_sold_sector_politician, most_active_purchase, most_active_sell,
+    section_three_purchase_table, chamber_politician, wikipedia_information
 )
 
 # Set the page configuration

@@ -5,6 +5,7 @@ import unittest
 import pandas as pd
 from datetime import datetime
 from plotly.graph_objects import Figure
+
 from Src.visualization.graphs_istrument_finder import PoliticianGraph
 
 
