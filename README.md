@@ -53,7 +53,7 @@ pip install -r requirements_test.txt  # Install dependencies for testing the pro
 ### 5. Run the project
 
 ```sh
-streamlit run 🏠_Home_page.py
+streamlit run main.py
 ```
 
 ### Tests

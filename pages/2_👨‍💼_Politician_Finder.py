@@ -41,6 +41,7 @@ st.markdown(
             margin: 0;
             width: 100%;
         }
+        [data-testid="stSidebarNav"] ul li:first-child {display: none;}
     </style>
     """,
     unsafe_allow_html=True
