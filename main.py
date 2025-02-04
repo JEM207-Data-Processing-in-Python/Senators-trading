@@ -10,4 +10,4 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.switch_page("pages/1_🏠_Home_Page.py")
+st.switch_page("pages/1_🏠_Home_page.py")
