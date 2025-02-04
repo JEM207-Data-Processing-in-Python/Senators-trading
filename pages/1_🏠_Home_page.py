@@ -1,6 +1,5 @@
 """
-This file contains the configuration of Streamlit app Home page and it also
-serves as the main page of the app.
+This file contains the configuration of Streamlit app Home page
 """
 import os
 
@@ -24,6 +23,11 @@ st.set_page_config(
                  " portfolio-based recommendations."
     }
 )
+st.markdown("""
+    <style>
+        [data-testid="stSidebarNav"] ul li:first-child {display: none;}
+    </style>
+""", unsafe_allow_html=True)
 
 # Set Welcome Picture
 col1, col2, col3 = st.columns([1, 2, 1])
