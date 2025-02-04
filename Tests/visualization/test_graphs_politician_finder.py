@@ -5,6 +5,7 @@ import pytest
 import pandas as pd
 from unittest.mock import patch
 import plotly.graph_objects as go
+
 from Src.visualization.graphs_politician_finder import Politician_Data_Visualizer
 
 
@@ -42,7 +43,7 @@ def test_pie_chart_advanced(sample_data):
     assert figure.layout.title.text == "Average Investment of \n Politician A by Sector - Purchase"
 
 
-@patch('Src.streamlit.politician_finder_3.five_days')
+@patch('Src.streamlit.politician_finder.five_days')
 def test_five_days_graph(mock_five_days, sample_data):
     mock_five_days.return_value = pd.DataFrame({
         'Traded': ['2025-01-01', '2025-01-02'],

@@ -3,6 +3,7 @@ This file contains the Test cases for the home_page.py file.
 """
 import pytest
 import pandas as pd
+
 from Src.scraping.scraper import DataLoader
 from Src.streamlit.home_page import general_information
 

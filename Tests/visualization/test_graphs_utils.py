@@ -3,6 +3,7 @@ This file contains the tests for the graphs_utils.py file.
 """
 import pytest
 import pandas as pd
+
 from Src.visualization.graphs_utils import get_the_color
 
 

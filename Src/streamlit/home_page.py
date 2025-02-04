@@ -1,9 +1,9 @@
 """
 This file contains the helper code for the Streamlit app's Home page.
 """
+import pandas as pd
 
 from Src.scraping.scraper import DataLoader
-import pandas as pd
 
 
 def general_information() -> tuple:

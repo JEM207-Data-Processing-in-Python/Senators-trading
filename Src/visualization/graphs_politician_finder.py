@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from Src.visualization.graphs_utils import get_the_color
-from Src.streamlit.politician_finder_3 import five_days
+from Src.streamlit.politician_finder import five_days
 
 
 class Politician_Data_Visualizer:

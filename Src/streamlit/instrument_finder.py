@@ -3,6 +3,7 @@ This file contains the helper code for the Instrument Finder page.
 """
 import streamlit as st
 import pandas as pd
+
 from Src.scraping.scraper import DataLoader
 
 
@@ -75,7 +76,7 @@ def market_gain(date, instrument):
             return "Unknown"
 
         buy_price = financial_data[start_date].values[0]
-        current_price = financial_data[financial_data.columns.tolist()[-1]].values[0]
+        current_price = financial_data[financial_data.columns[financial_data.notna().iloc[0]].tolist()[-1]].values[0]
 
         gain = round(100 * ((current_price / buy_price) - 1), 2)
 

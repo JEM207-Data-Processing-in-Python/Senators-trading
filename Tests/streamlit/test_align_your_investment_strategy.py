@@ -4,7 +4,11 @@ This is a test file for the test_align_your_investment_strategy.py file.
 import pytest
 import pandas as pd
 from unittest.mock import patch
-from Src.streamlit.align_your_investment_strategy import load_and_merge_data, get_unique_sectors_and_instruments, chunk_list
+
+from Src.streamlit.align_your_investment_strategy import (
+    load_and_merge_data, get_unique_sectors_and_instruments,
+    chunk_list
+)
 
 
 class MockDataLoader:

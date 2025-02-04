@@ -3,6 +3,7 @@ This is a test file for the instrument_finder.py file
 """
 import unittest
 import pandas as pd
+
 from Src.streamlit.instrument_finder import instrument_information
 
 

@@ -74,7 +74,7 @@ for i, politician in enumerate(list_of_politicians):
         # Status of the trades for the selected politician
         data_display, weighted_profit, politician_data = process_politician_data(instrument_data, politician)
         st.dataframe(data_display, use_container_width=True, hide_index=True)
-        st.write(f"{politician} has made a total profit of **{politician_data['Profit'].sum()} $** from trading "
+        st.write(f"{politician} has made a total profit of **{politician_data['Profit'].sum():.2f} $** from trading "
                  f"**{selected_instrument}** with an average gain of **{weighted_profit} %**. However, the S&P 500 "
                  f"has gained an average of **{politician_data['S&P 500'].mean():.2f}** % during the same period.")
 
